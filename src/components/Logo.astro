@@ -7,11 +7,7 @@ const textColor =
   variant === 'light' ? 'text-navy' : variant === 'auto' ? 'text-[var(--header-fg)]' : 'text-white';
 ---
 <div class={`flex items-center gap-2.5 ${className}`}>
-  <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="shrink-0">
-    <rect width="36" height="36" rx="9" fill="#0A2A6B" />
-    <path d="M9 27V10.5L18 19.5L27 10.5V27" stroke="#3DA9E0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M9 10.5L18 19" stroke="#9FE0FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  </svg>
+  <img src="/img/logo.jpg" alt="PROcréal" width="34" height="34" class="h-[34px] w-[34px] shrink-0 rounded-[9px] object-cover" />
   <span class={`font-heading font-bold text-lg leading-none tracking-tight ${textColor}`}>
     PRO<span class="text-cyan">créal</span>
   </span>

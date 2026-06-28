@@ -1,6 +1,6 @@
 ---
-title: "Dessinateurs Projeteurs 3D — Assistants Architectes (4e Promo)"
-title_en: "3D Drafting Designers — Architect Assistants (4th Cohort)"
+title: "Dessinateurs Projeteurs 3D — Assistants Architectes"
+title_en: "3D Drafting Designers — Architect Assistants"
 duration: "96 heures"
 duration_en: "96 hours"
 schedule: "Chaque samedi de 8h à 18h"
@@ -51,8 +51,8 @@ faq_en:
     answer: "This session opens the center's 4th cohort of 3D drafting designers."
 instructor: "KOKO Landry"
 featured: true
-description: "96 heures intensives, chaque samedi, pour devenir assistant architecte certifié FDFP et maîtriser AutoCAD comme ArchiCAD."
-description_en: "96 intensive hours, every Saturday, to become an FDFP-certified architect assistant fluent in both AutoCAD and ArchiCAD."
+description: ""
+description_en: ""
 ---
 
 La 4e promotion de ce parcours samedi-uniquement forme des assistants architectes opérationnels, du croquis à la maquette 3D, avec une attestation reconnue à la clé.

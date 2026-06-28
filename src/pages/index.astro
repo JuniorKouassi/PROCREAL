@@ -23,15 +23,6 @@ const latestPosts = (await getCollection('blog'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 
-const galleryPreview = [
-  { src: 'https://placehold.co/500x650/0A2A6B/3DA9E0?text=Promotion+2025' },
-  { src: 'https://placehold.co/500x500/3DA9E0/0A2A6B?text=Atelier' },
-  { src: 'https://placehold.co/500x500/0A2A6B/F5C518?text=Diplomes' },
-  { src: 'https://placehold.co/500x650/3DA9E0/FFFFFF?text=Cours+du+soir' },
-  { src: 'https://placehold.co/500x500/0A2A6B/3DA9E0?text=Masterclass' },
-  { src: 'https://placehold.co/500x500/F5C518/0A2A6B?text=Remise' },
-];
-
 const pillars = [
   {
     title: 'Formateurs experts',
@@ -177,27 +168,14 @@ const pillars = [
     </div>
   </section>
 
-  <section class="bg-white py-24">
-    <div class="mx-auto max-w-6xl px-5 lg:px-8">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">{t('nav.galerie')}</p>
-        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">La vie du centre</h2>
-      </div>
-      <a href={localizePath('/galerie', lang)} class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-        {galleryPreview.map((image) => (
-          <span class="reveal block aspect-square overflow-hidden rounded-xl">
-            <img src={image.src} alt="" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
-          </span>
-        ))}
+  <section class="bg-white py-16">
+    <div class="reveal mx-auto max-w-6xl px-5 text-center lg:px-8">
+      <a
+        href={localizePath('/galerie', lang)}
+        class="inline-flex rounded-full border border-navy/15 px-7 py-3 font-semibold text-navy transition-colors hover:bg-navy hover:text-white"
+      >
+        {t('cta.viewGallery')}
       </a>
-      <div class="reveal mt-10 text-center">
-        <a
-          href={localizePath('/galerie', lang)}
-          class="inline-flex rounded-full border border-navy/15 px-7 py-3 font-semibold text-navy transition-colors hover:bg-navy hover:text-white"
-        >
-          {t('cta.viewGallery')}
-        </a>
-      </div>
     </div>
   </section>
 

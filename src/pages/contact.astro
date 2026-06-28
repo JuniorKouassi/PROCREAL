@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { localBusinessSchema } from '../lib/seo';
+import { useTranslations } from '../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+const formationTitles = (await getCollection('formations')).map((entry) => entry.data.title);
+
+const mapQuery = encodeURIComponent('PROcréal, Cocody Faya, derrière Playce, Marché Diarrassouba, Abidjan');
+const whatsappHref = `https://wa.me/2250749817621?text=${encodeURIComponent(t('whatsapp.default'))}`;
+---
+
+<PageLayout
+  title="Contact — PROcréal Abidjan"
+  description="Contactez PROcréal à Cocody Faya, Abidjan : téléphone, WhatsApp, email et formulaire de contact pour toute question sur nos formations."
+  heading={t('nav.contact')}
+  subheading="Une question sur une formation, un planning ou un tarif ? Écrivez-nous, nous répondons rapidement."
+  breadcrumb={[
+    { name: 'Accueil', url: '/' },
+    { name: t('nav.contact'), url: '/contact' },
+  ]}
+  jsonLd={[localBusinessSchema()]}
+>
+  <section class="bg-cream py-16">
+    <div class="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[1fr_1.2fr] lg:px-8">
+      <div class="reveal space-y-6">
+        <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-navy/5">
+          <h3 class="font-heading font-bold text-navy">{t('common.address')}</h3>
+          <p class="mt-2 text-sm text-muted">Cocody Faya, derrière Playce<br />Marché Diarrassouba, Abidjan</p>
+        </div>
+        <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-navy/5">
+          <h3 class="font-heading font-bold text-navy">{t('common.phone')}</h3>
+          <a href="tel:+2250749817621" class="mt-2 block text-sm text-cyan hover:underline">+225 07 49 81 76 21</a>
+        </div>
+        <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-navy/5">
+          <h3 class="font-heading font-bold text-navy">{t('common.email')}</h3>
+          <a href="mailto:procreal.r@gmail.com" class="mt-2 block text-sm text-cyan hover:underline">procreal.r@gmail.com</a>
+        </div>
+        <a
+          href={whatsappHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 font-semibold text-white transition-transform hover:scale-105"
+        >
+          {t('cta.whatsapp')}
+        </a>
+        <div class="overflow-hidden rounded-2xl shadow-sm ring-1 ring-navy/5">
+          <iframe
+            title="Localisation PROcréal"
+            src={`https://maps.google.com/maps?q=${mapQuery}&output=embed`}
+            class="h-64 w-full border-0"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+
+      <ContactForm lang={lang} formations={formationTitles} />
+    </div>
+  </section>
+</PageLayout>

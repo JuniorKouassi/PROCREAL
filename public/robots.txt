@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://procreal.ci/sitemap-index.xml

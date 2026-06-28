@@ -1,0 +1,17 @@
+---
+import { switchLocalePath } from '../i18n/utils';
+
+const { lang, class: className = '' } = Astro.props;
+const pathname = Astro.url.pathname;
+const frPath = switchLocalePath(pathname, 'fr');
+const enPath = switchLocalePath(pathname, 'en');
+---
+<div class={`flex items-center gap-1.5 text-sm font-semibold ${className}`}>
+  <a href={frPath} class={lang === 'fr' ? 'opacity-100' : 'opacity-50 hover:opacity-100'} aria-current={lang === 'fr' ? 'page' : undefined}>
+    FR
+  </a>
+  <span class="opacity-30">/</span>
+  <a href={enPath} class={lang === 'en' ? 'opacity-100' : 'opacity-50 hover:opacity-100'} aria-current={lang === 'en' ? 'page' : undefined}>
+    EN
+  </a>
+</div>

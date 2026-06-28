@@ -1,0 +1,16 @@
+---
+const { items = [] } = Astro.props;
+---
+
+<div data-marquee class="overflow-hidden whitespace-nowrap border-y border-navy/10 bg-cream py-3">
+  <div data-marquee-track class="inline-flex">
+    <div data-marquee-content class="inline-flex gap-10 pr-10">
+      {items.map((item) => (
+        <span class="inline-flex items-center gap-2 text-sm font-semibold text-navy">
+          <span class="h-1.5 w-1.5 rounded-full bg-yellow"></span>
+          {item}
+        </span>
+      ))}
+    </div>
+  </div>
+</div>

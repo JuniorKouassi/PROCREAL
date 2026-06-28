@@ -1,0 +1,106 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import GalleryGrid from '../../components/GalleryGrid.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const lang = 'en';
+const t = useTranslations(lang);
+
+const categories = ['All', 'Cohorts', 'Graduations', 'Classes', 'Events'];
+const categoryMap = {
+  All: 'all',
+  Cohorts: 'Promotions',
+  Graduations: 'Remises de diplômes',
+  Classes: 'Cours',
+  Events: 'Événements',
+};
+
+const palette = [
+  ['0A2A6B', '3DA9E0'],
+  ['3DA9E0', '0A2A6B'],
+  ['0A2A6B', 'F5C518'],
+  ['071c4a', '3DA9E0'],
+];
+
+const images = [
+  { category: 'Promotions', caption: '4th cohort — 3D Drafting Designers' },
+  { category: 'Cours', caption: 'AutoCAD workshop, Evening Classes' },
+  { category: 'Remises de diplômes', caption: 'FDFP certificate ceremony' },
+  { category: 'Promotions', caption: '3rd cohort — Architect Assistants' },
+  { category: 'Événements', caption: 'ArchiCAD Masterclass, 36th anniversary edition' },
+  { category: 'Cours', caption: 'ArchiCAD hands-on session' },
+  { category: 'Remises de diplômes', caption: 'Group photo — 2025 graduates' },
+  { category: 'Événements', caption: 'Cake cutting, PROcréal anniversary' },
+  { category: 'Cours', caption: 'Evening session, AutoCAD Module 2' },
+  { category: 'Promotions', caption: 'ArchiCAD 20-hour special offer' },
+  { category: 'Événements', caption: 'Alumni networking' },
+  { category: 'Remises de diplômes', caption: 'Evening Classes 2025 graduates' },
+].map((image, index) => {
+  const [from, to] = palette[index % palette.length];
+  return {
+    ...image,
+    src: `https://placehold.co/600x${index % 3 === 0 ? 750 : 600}/${from}/${to}?text=${encodeURIComponent(image.category)}`,
+  };
+});
+---
+
+<PageLayout
+  title="Gallery — Cohorts, graduations and PROcréal events"
+  description="See the cohorts, graduation ceremonies, classes and events of PROcréal training center in Abidjan."
+  heading="Gallery"
+  subheading="Life at the center: cohorts, graduation ceremonies, classes and events."
+  breadcrumb={[
+    { name: 'Home', url: '/' },
+    { name: t('nav.galerie'), url: '/galerie' },
+  ]}
+>
+  <section class="bg-cream py-16">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div data-gallery-filters class="reveal flex flex-wrap gap-2">
+        {categories.map((category, index) => (
+          <button
+            type="button"
+            data-category-filter={categoryMap[category]}
+            class:list={[
+              'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
+              index === 0 ? 'border-navy bg-navy text-white' : 'border-navy/15 text-navy hover:bg-navy hover:text-white',
+            ]}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      <div class="mt-10">
+        <GalleryGrid images={images} />
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  function bindGalleryFilters() {
+    const filters = document.querySelectorAll('[data-category-filter]');
+    const items = document.querySelectorAll('[data-gallery-item]');
+    if (!filters.length || !items.length) return;
+
+    filters.forEach((button) => {
+      button.addEventListener('click', () => {
+        const category = button.dataset.categoryFilter;
+        filters.forEach((btn) => {
+          const isActive = btn === button;
+          btn.classList.toggle('bg-navy', isActive);
+          btn.classList.toggle('text-white', isActive);
+          btn.classList.toggle('border-navy', isActive);
+          btn.classList.toggle('text-navy', !isActive);
+          btn.classList.toggle('border-navy/15', !isActive);
+        });
+        items.forEach((item) => {
+          const matches = category === 'all' || item.dataset.category === category;
+          item.classList.toggle('hidden', !matches);
+        });
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', bindGalleryFilters);
+</script>

@@ -1,0 +1,37 @@
+---
+import { localizedField, localizePath, useTranslations } from '../i18n/utils';
+
+const { formation, lang } = Astro.props;
+const t = useTranslations(lang);
+const data = formation.data;
+const title = localizedField(data, 'title', lang);
+const description = localizedField(data, 'description', lang);
+const href = localizePath(`/formations/${formation.id}`, lang);
+---
+
+<a
+  href={href}
+  data-tilt
+  class="reveal group block overflow-hidden rounded-2xl bg-white shadow-sm shadow-navy/5 ring-1 ring-navy/5 transition-shadow hover:shadow-xl hover:shadow-cyan/10"
+>
+  <div class="relative h-44 bg-gradient-to-br from-navy to-cyan">
+    {data.newBadge && (
+      <span class="absolute left-4 top-4 rounded-full bg-yellow px-3 py-1 text-xs font-bold text-navy">{t('common.new')}</span>
+    )}
+    <div class="absolute bottom-4 left-4 right-4 font-heading text-sm font-semibold text-white/90">{data.duration}</div>
+  </div>
+  <div class="p-6">
+    <h3 class="font-heading text-lg font-bold text-navy">{title}</h3>
+    <p class="mt-2 line-clamp-2 text-sm text-muted">{description}</p>
+    <div class="mt-4 flex items-center justify-between">
+      {data.price ? (
+        <span class="font-heading text-base font-bold text-navy">
+          {data.price.toLocaleString('fr-FR')} {data.currency}
+        </span>
+      ) : (
+        <span />
+      )}
+      <span class="text-sm font-semibold text-cyan group-hover:underline">{t('cta.discoverFormation')} →</span>
+    </div>
+  </div>
+</a>

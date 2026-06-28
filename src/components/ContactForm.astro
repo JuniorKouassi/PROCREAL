@@ -1,0 +1,72 @@
+---
+import { useTranslations } from '../i18n/utils';
+
+const { lang, formations = [] } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<form data-contact-form class="reveal space-y-5 rounded-2xl bg-white p-8 shadow-sm ring-1 ring-navy/5">
+  <div>
+    <label class="text-sm font-semibold text-navy" for="name">{t('form.name')}</label>
+    <input id="name" name="name" type="text" required class="mt-1.5 w-full rounded-lg border border-navy/15 px-4 py-3 text-sm focus:border-cyan focus:outline-none" />
+  </div>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label class="text-sm font-semibold text-navy" for="email">{t('form.email')}</label>
+      <input id="email" name="email" type="email" required class="mt-1.5 w-full rounded-lg border border-navy/15 px-4 py-3 text-sm focus:border-cyan focus:outline-none" />
+    </div>
+    <div>
+      <label class="text-sm font-semibold text-navy" for="phone">{t('form.phone')}</label>
+      <input id="phone" name="phone" type="tel" required class="mt-1.5 w-full rounded-lg border border-navy/15 px-4 py-3 text-sm focus:border-cyan focus:outline-none" />
+    </div>
+  </div>
+  <div>
+    <label class="text-sm font-semibold text-navy" for="formation">{t('form.formation')}</label>
+    <select id="formation" name="formation" class="mt-1.5 w-full rounded-lg border border-navy/15 bg-white px-4 py-3 text-sm focus:border-cyan focus:outline-none">
+      <option value="">{t('form.selectFormation')}</option>
+      {formations.map((title) => <option value={title}>{title}</option>)}
+    </select>
+  </div>
+  <div>
+    <label class="text-sm font-semibold text-navy" for="message">{t('form.message')}</label>
+    <textarea id="message" name="message" rows="4" required class="mt-1.5 w-full rounded-lg border border-navy/15 px-4 py-3 text-sm focus:border-cyan focus:outline-none"></textarea>
+  </div>
+  <button type="submit" class="w-full rounded-full bg-navy px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]">
+    {t('form.send')}
+  </button>
+  <p data-form-status class="hidden text-sm" role="status"></p>
+</form>
+
+<script>
+  import { submitForm } from '../lib/form.js';
+  import { useTranslations } from '../i18n/utils.js';
+
+  function bindContactForm() {
+    const form = document.querySelector('[data-contact-form]');
+    if (!form) return;
+    const status = form.querySelector('[data-form-status]');
+    const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
+    const t = useTranslations(lang);
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = form.querySelector('button[type="submit"]');
+      button.disabled = true;
+      button.textContent = t('form.sending');
+      try {
+        await submitForm(form);
+        status.textContent = t('form.success');
+        status.className = 'text-sm text-cyan';
+        form.reset();
+      } catch (error) {
+        status.textContent = t('form.error');
+        status.className = 'text-sm text-red-600';
+      } finally {
+        status.classList.remove('hidden');
+        button.disabled = false;
+        button.textContent = t('form.send');
+      }
+    });
+  }
+  document.addEventListener('astro:page-load', bindContactForm);
+</script>

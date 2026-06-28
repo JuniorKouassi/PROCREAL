@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import RegistrationForm from '../../components/RegistrationForm.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const lang = 'en';
+const t = useTranslations(lang);
+
+const formations = (await getCollection('formations')).map((entry) => ({ slug: entry.id, title: entry.data.title_en }));
+---
+
+<PageLayout
+  title="Enrol in a PROcréal course"
+  description="Enrol in a few steps in a PROcréal course: evening classes, ArchiCAD masterclass or 3D drafting designer."
+  heading={t('nav.inscription')}
+  subheading="Choose your course, fill in your details, then finalize on WhatsApp."
+  breadcrumb={[
+    { name: 'Home', url: '/' },
+    { name: t('nav.inscription'), url: '/inscription' },
+  ]}
+>
+  <section class="bg-cream py-16">
+    <div class="mx-auto max-w-2xl px-5 lg:px-8">
+      <RegistrationForm lang={lang} formations={formations} />
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  function preselectFormation() {
+    const slug = new URLSearchParams(window.location.search).get('formation');
+    if (!slug) return;
+    const radio = document.querySelector(`input[name="formation"][value="${slug}"]`);
+    if (radio) radio.checked = true;
+  }
+  document.addEventListener('astro:page-load', preselectFormation);
+</script>

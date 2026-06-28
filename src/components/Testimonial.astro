@@ -1,0 +1,19 @@
+---
+const { name, role, quote, avatar } = Astro.props;
+---
+
+<figure class="flex h-full flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-navy/5">
+  <svg class="h-6 w-6 text-cyan/40" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M7 7h4v4a4 4 0 0 1-4 4H6v2h1a6 6 0 0 0 6-6V7H7Zm10 0h4v4a4 4 0 0 1-4 4h-1v2h1a6 6 0 0 0 6-6V7h-6Z" />
+  </svg>
+  <blockquote class="mt-4 flex-1 text-sm leading-relaxed text-ink">{quote}</blockquote>
+  <figcaption class="mt-5 flex items-center gap-3">
+    <div class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-navy to-cyan text-sm font-bold text-white">
+      {avatar ? <img src={avatar} alt={name} class="h-full w-full object-cover" /> : name.charAt(0)}
+    </div>
+    <div>
+      <p class="text-sm font-semibold text-navy">{name}</p>
+      {role && <p class="text-xs text-muted">{role}</p>}
+    </div>
+  </figcaption>
+</figure>

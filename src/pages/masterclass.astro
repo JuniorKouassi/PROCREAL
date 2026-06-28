@@ -1,0 +1,108 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import CTASection from '../components/CTASection.astro';
+import { courseSchema } from '../lib/seo';
+import { localizePath, useTranslations } from '../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+const entry = await getEntry('formations', 'masterclass-archicad-avancee');
+const data = entry.data;
+
+const whatsappHref = `https://wa.me/2250749817621?text=${encodeURIComponent('Bonjour PROcréal, je souhaite des informations sur la Masterclass ArchiCAD Avancée.')}`;
+const registerHref = `${localizePath('/inscription', lang)}?formation=masterclass-archicad-avancee`;
+---
+
+<BaseLayout
+  title="Masterclass ArchiCAD Avancée à Abidjan"
+  description="Masterclass ArchiCAD Abidjan : 2 jours 100% pratiques pour les anciens élèves PROcréal, édition spéciale 36 ans, 20 places seulement."
+  jsonLd={[courseSchema(data, lang, '/masterclass')]}
+>
+  <Hero
+    lang={lang}
+    variant="formation"
+    eyebrow={data.edition}
+    title="Masterclass ArchiCAD Avancée"
+    subtitle="Deux jours 100% pratiques pour passer du niveau utilisateur ArchiCAD au niveau pro."
+    primaryLabel={t('cta.registerNow')}
+    primaryHref={registerHref}
+    secondaryLabel={t('cta.whatsapp')}
+    secondaryHref={whatsappHref}
+  />
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-3xl px-5 text-center lg:px-8">
+      <p class="reveal text-sm font-semibold uppercase tracking-wide text-cyan">Réservé aux anciens élèves</p>
+      <h2 class="reveal mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">
+        20 places seulement, pour un niveau professionnel
+      </h2>
+      <p class="reveal mt-5 leading-relaxed text-muted">{data.audience}</p>
+    </div>
+  </section>
+
+  <section class="bg-cream py-20">
+    <div class="mx-auto max-w-5xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">{t('common.program')}</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Les 6 piliers du programme</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2">
+        {data.program.map((item, index) => (
+          <div class="reveal flex items-start gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-navy/5">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-navy font-heading text-sm font-bold text-cyan">
+              {index + 1}
+            </span>
+            <p class="text-sm leading-relaxed text-ink">{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-4xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">{t('common.bonus')}</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">En plus du contenu pédagogique</h2>
+      </div>
+      <div class="mt-12 grid gap-5 sm:grid-cols-2">
+        {data.bonus.map((item) => (
+          <div class="reveal flex items-start gap-3 rounded-xl bg-yellow/10 p-5 ring-1 ring-yellow/30">
+            <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-yellow"></span>
+            <p class="text-sm leading-relaxed text-ink">{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-navy py-20 text-white">
+    <div class="mx-auto max-w-3xl px-5 text-center lg:px-8">
+      <p class="reveal text-sm font-semibold uppercase tracking-wide text-cyan">{data.schedule}</p>
+      <h2 class="reveal mt-3 font-heading text-4xl font-bold lg:text-5xl">
+        {data.price.toLocaleString('fr-FR')} {data.currency}
+      </h2>
+      <p class="reveal mt-2 text-white/70">{data.seats} places — réservé aux anciens participants PROcréal</p>
+      <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href={registerHref} class="rounded-full bg-cyan px-7 py-3.5 font-semibold text-white transition-transform hover:scale-105">
+          {t('cta.registerNow')}
+        </a>
+        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/30 px-7 py-3.5 font-semibold text-white transition-colors hover:bg-white/10">
+          {t('cta.whatsapp')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    lang={lang}
+    title="Les places partent vite"
+    subtitle="20 participants maximum pour garder un accompagnement individuel sur les deux jours."
+    primaryLabel={t('cta.registerNow')}
+    primaryHref={registerHref}
+    secondaryLabel={t('cta.viewDetails')}
+    secondaryHref={localizePath('/formations/masterclass-archicad-avancee', lang)}
+  />
+</BaseLayout>

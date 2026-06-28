@@ -1,0 +1,44 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { useTranslations } from '../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+---
+
+<PageLayout
+  title="Mentions légales"
+  description="Mentions légales du site PROcréal — centre de formation continue à Abidjan, Côte d'Ivoire."
+  heading={t('footer.legalMentions')}
+  breadcrumb={[
+    { name: 'Accueil', url: '/' },
+    { name: t('footer.legalMentions'), url: '/mentions-legales' },
+  ]}
+>
+  <section class="bg-white py-20">
+    <div class="reveal prose prose-slate mx-auto max-w-3xl px-5 prose-headings:font-heading prose-headings:text-navy lg:px-8">
+      <h2>Éditeur du site</h2>
+      <p>
+        Le site procreal.ci est édité par PROcréal, centre de formation continue basé à Cocody Faya, derrière Playce,
+        Marché Diarrassouba, Abidjan, Côte d'Ivoire. Responsable de publication : KOKO Landry, fondateur.
+      </p>
+      <h2>Hébergement</h2>
+      <p>Le site est hébergé par Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA.</p>
+      <h2>Activité</h2>
+      <p>
+        PROcréal est un centre de formation professionnelle continue spécialisé en architecture, CAO/DAO (ArchiCAD,
+        AutoCAD) et métiers du BTP, agréé FDFP (Fonds de Développement de la Formation Professionnelle).
+      </p>
+      <h2>Propriété intellectuelle</h2>
+      <p>
+        L'ensemble des contenus présents sur ce site (textes, images, logo, identité visuelle) est la propriété de
+        PROcréal, sauf mention contraire. Toute reproduction sans autorisation préalable est interdite.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        Pour toute question relative aux présentes mentions légales, contactez-nous à
+        <a href="mailto:procreal.r@gmail.com">procreal.r@gmail.com</a>.
+      </p>
+    </div>
+  </section>
+</PageLayout>

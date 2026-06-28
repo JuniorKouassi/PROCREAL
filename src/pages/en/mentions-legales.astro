@@ -1,0 +1,44 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const lang = 'en';
+const t = useTranslations(lang);
+---
+
+<PageLayout
+  title="Legal Notice"
+  description="Legal notice for the PROcréal website — continuing education center in Abidjan, Ivory Coast."
+  heading={t('footer.legalMentions')}
+  breadcrumb={[
+    { name: 'Home', url: '/' },
+    { name: t('footer.legalMentions'), url: '/mentions-legales' },
+  ]}
+>
+  <section class="bg-white py-20">
+    <div class="reveal prose prose-slate mx-auto max-w-3xl px-5 prose-headings:font-heading prose-headings:text-navy lg:px-8">
+      <h2>Publisher</h2>
+      <p>
+        The website procreal.ci is published by PROcréal, a continuing education center based in Cocody Faya,
+        behind Playce, Diarrassouba Market, Abidjan, Ivory Coast. Publication manager: KOKO Landry, founder.
+      </p>
+      <h2>Hosting</h2>
+      <p>The site is hosted by Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA.</p>
+      <h2>Activity</h2>
+      <p>
+        PROcréal is a continuing professional education center specialized in architecture, CAD/BIM (ArchiCAD,
+        AutoCAD) and construction trades, FDFP-approved (Fonds de Développement de la Formation Professionnelle).
+      </p>
+      <h2>Intellectual property</h2>
+      <p>
+        All content on this site (text, images, logo, visual identity) is the property of PROcréal, unless stated
+        otherwise. Any reproduction without prior authorization is prohibited.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        For any question about this legal notice, contact us at
+        <a href="mailto:procreal.r@gmail.com">procreal.r@gmail.com</a>.
+      </p>
+    </div>
+  </section>
+</PageLayout>

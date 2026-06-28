@@ -1,0 +1,25 @@
+---
+import { localizePath } from '../i18n/utils';
+
+const { post, lang } = Astro.props;
+const formattedDate = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'fr-FR', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+}).format(post.data.pubDate);
+const href = localizePath(`/blog/${post.id}`, lang);
+const title = lang === 'en' ? post.data.title_en : post.data.title;
+const excerpt = lang === 'en' ? post.data.excerpt_en : post.data.excerpt;
+---
+
+<a
+  href={href}
+  class="reveal group block overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-navy/5 transition-shadow hover:shadow-lg"
+>
+  <div class="h-40 bg-gradient-to-br from-cyan to-navy"></div>
+  <div class="p-6">
+    <p class="text-xs font-semibold uppercase tracking-wide text-cyan">{formattedDate}</p>
+    <h3 class="mt-2 font-heading text-base font-bold text-navy transition-colors group-hover:text-cyan">{title}</h3>
+    <p class="mt-2 line-clamp-2 text-sm text-muted">{excerpt}</p>
+  </div>
+</a>

@@ -1,0 +1,47 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const lang = 'en';
+const t = useTranslations(lang);
+---
+
+<PageLayout
+  title="Privacy Policy"
+  description="Privacy policy for the PROcréal website: data collected, usage and user rights."
+  heading={t('footer.privacyPolicy')}
+  breadcrumb={[
+    { name: 'Home', url: '/' },
+    { name: t('footer.privacyPolicy'), url: '/politique-confidentialite' },
+  ]}
+>
+  <section class="bg-white py-20">
+    <div class="reveal prose prose-slate mx-auto max-w-3xl px-5 prose-headings:font-heading prose-headings:text-navy lg:px-8">
+      <h2>Data collected</h2>
+      <p>
+        When you fill in the contact or enrolment form, we collect your name, email, phone number and the course
+        you're interested in, solely to respond to your request or process your enrolment.
+      </p>
+      <h2>Use of data</h2>
+      <p>
+        This information is used exclusively by the PROcréal team to contact you and organize your participation
+        in our courses. It is never sold or transferred to third parties for commercial purposes.
+      </p>
+      <h2>Retention</h2>
+      <p>
+        Your data is kept for as long as necessary to process your request, then archived or deleted in accordance
+        with applicable regulations in Ivory Coast.
+      </p>
+      <h2>Your rights</h2>
+      <p>
+        You can request access, correction or deletion of your data at any time by contacting us at
+        <a href="mailto:procreal.r@gmail.com">procreal.r@gmail.com</a>.
+      </p>
+      <h2>Cookies</h2>
+      <p>
+        This site does not use advertising cookies. Only anonymized audience measurement tools may be used to
+        improve the user experience.
+      </p>
+    </div>
+  </section>
+</PageLayout>

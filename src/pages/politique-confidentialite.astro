@@ -1,0 +1,48 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { useTranslations } from '../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+---
+
+<PageLayout
+  title="Politique de confidentialité"
+  description="Politique de confidentialité du site PROcréal : données collectées, usage et droits des utilisateurs."
+  heading={t('footer.privacyPolicy')}
+  breadcrumb={[
+    { name: 'Accueil', url: '/' },
+    { name: t('footer.privacyPolicy'), url: '/politique-confidentialite' },
+  ]}
+>
+  <section class="bg-white py-20">
+    <div class="reveal prose prose-slate mx-auto max-w-3xl px-5 prose-headings:font-heading prose-headings:text-navy lg:px-8">
+      <h2>Données collectées</h2>
+      <p>
+        Lorsque vous remplissez le formulaire de contact ou d'inscription, nous collectons votre nom, votre email,
+        votre numéro de téléphone et la formation qui vous intéresse, dans le seul but de répondre à votre demande
+        ou de traiter votre inscription.
+      </p>
+      <h2>Usage des données</h2>
+      <p>
+        Ces informations sont utilisées exclusivement par l'équipe PROcréal pour vous recontacter et organiser votre
+        participation à nos formations. Elles ne sont jamais vendues ni transmises à des tiers à des fins commerciales.
+      </p>
+      <h2>Conservation</h2>
+      <p>
+        Vos données sont conservées le temps nécessaire au traitement de votre demande, puis archivées ou supprimées
+        conformément à la réglementation en vigueur en Côte d'Ivoire.
+      </p>
+      <h2>Vos droits</h2>
+      <p>
+        Vous pouvez demander l'accès, la rectification ou la suppression de vos données à tout moment en nous
+        contactant à <a href="mailto:procreal.r@gmail.com">procreal.r@gmail.com</a>.
+      </p>
+      <h2>Cookies</h2>
+      <p>
+        Ce site n'utilise pas de cookies publicitaires. Seuls des outils de mesure d'audience anonymisés peuvent être
+        utilisés pour améliorer l'expérience utilisateur.
+      </p>
+    </div>
+  </section>
+</PageLayout>

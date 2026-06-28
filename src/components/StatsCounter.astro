@@ -1,0 +1,10 @@
+---
+const { value, suffix = '', label, light = true } = Astro.props;
+---
+
+<div class="reveal text-center">
+  <div class={`font-heading text-4xl font-bold lg:text-5xl ${light ? 'text-white' : 'text-navy'}`}>
+    <span data-counter={value} data-counter-suffix={suffix}>0{suffix}</span>
+  </div>
+  <p class={`mt-2 text-sm ${light ? 'text-white/70' : 'text-muted'}`}>{label}</p>
+</div>

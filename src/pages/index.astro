@@ -1,0 +1,234 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import StatsCounter from '../components/StatsCounter.astro';
+import FormationCard from '../components/FormationCard.astro';
+import TestimonialSlider from '../components/TestimonialSlider.astro';
+import BlogCard from '../components/BlogCard.astro';
+import CTASection from '../components/CTASection.astro';
+import { localizePath, useTranslations } from '../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+
+const allFormations = await getCollection('formations');
+const featuredFormations = allFormations.filter((f) => f.data.featured).slice(0, 3);
+
+const testimonials = (await getCollection('testimonials'))
+  .filter((entry) => entry.data.featured)
+  .map((entry) => entry.data);
+
+const latestPosts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const galleryPreview = [
+  { src: 'https://placehold.co/500x650/0A2A6B/3DA9E0?text=Promotion+2025' },
+  { src: 'https://placehold.co/500x500/3DA9E0/0A2A6B?text=Atelier' },
+  { src: 'https://placehold.co/500x500/0A2A6B/F5C518?text=Diplomes' },
+  { src: 'https://placehold.co/500x650/3DA9E0/FFFFFF?text=Cours+du+soir' },
+  { src: 'https://placehold.co/500x500/0A2A6B/3DA9E0?text=Masterclass' },
+  { src: 'https://placehold.co/500x500/F5C518/0A2A6B?text=Remise' },
+];
+
+const pillars = [
+  {
+    title: 'Formateurs experts',
+    text: 'KOKO Landry et son équipe transmettent une pratique de terrain, pas seulement de la théorie.',
+    icon: 'M12 2 2 7l10 5 10-5-10-5Zm0 9L2 7v6l10 5 10-5V7Z',
+  },
+  {
+    title: '100% pratique',
+    text: "Chaque module se conclut par un projet réel, pas un simple exercice théorique.",
+    icon: 'M9 17v-6a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v6M4 21h16M4 21v-4a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4',
+  },
+  {
+    title: 'Petits groupes',
+    text: '20 places maximum par session, pour un accompagnement individuel sur chaque poste.',
+    icon: 'M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M11 7a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM21 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75',
+  },
+  {
+    title: 'Diplôme & insertion',
+    text: 'Attestations reconnues et accompagnement vers une insertion professionnelle réelle.',
+    icon: 'M12 2 2 7l10 5 10-5-10-5ZM6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5',
+  },
+];
+---
+
+<BaseLayout
+  title="Formation ArchiCAD, AutoCAD & BTP à Abidjan"
+  description="Centre de formation continue agréé FDFP à Abidjan (Cocody Faya) : cours du soir, masterclass ArchiCAD avancée et formation dessinateur projeteur 3D en Côte d'Ivoire."
+>
+  <Hero
+    lang={lang}
+    variant="home"
+    eyebrow="Centre de formation CAO/DAO & BTP — Abidjan"
+    title="PROcréons des Experts & Leaders de demain"
+    subtitle="Centre de formation continue en architecture, CAO/DAO et métiers du BTP. Passe du niveau utilisateur au niveau pro."
+    primaryLabel={t('cta.viewFormations')}
+    primaryHref="/formations"
+    secondaryLabel={t('cta.whatsapp')}
+    secondaryHref={`https://wa.me/2250749817621?text=${encodeURIComponent(t('whatsapp.default'))}`}
+  />
+
+  <section class="bg-navy-dark py-10 text-white">
+    <div class="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-5 lg:grid-cols-4 lg:px-8">
+      <div class="reveal text-center">
+        <p class="font-heading text-2xl font-bold lg:text-3xl">{t('common.since')}</p>
+        <p class="mt-1 text-sm text-white/60">Centre fondé à Abidjan</p>
+      </div>
+      <StatsCounter value={4} label={t('common.promotionsFormed')} />
+      <div class="reveal text-center">
+        <p class="font-heading text-2xl font-bold text-yellow lg:text-3xl">FDFP</p>
+        <p class="mt-1 text-sm text-white/60">{t('common.approvedFdfp')}</p>
+      </div>
+      <div class="reveal text-center">
+        <p class="font-heading text-2xl font-bold lg:text-3xl">ArchiCAD / AutoCAD</p>
+        <p class="mt-1 text-sm text-white/60">{t('common.certified')}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-cream py-24">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">{t('nav.formations')}</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Nos formations phares</h2>
+      </div>
+      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {featuredFormations.map((formation) => <FormationCard formation={formation} lang={lang} />)}
+      </div>
+      <div class="reveal mt-12 text-center">
+        <a
+          href={localizePath('/formations', lang)}
+          class="inline-flex rounded-full border border-navy/15 px-7 py-3 font-semibold text-navy transition-colors hover:bg-navy hover:text-white"
+        >
+          {t('cta.viewAll')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-24">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">Pourquoi nous</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Pourquoi choisir PROcréal</h2>
+      </div>
+      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {pillars.map((pillar) => (
+          <div class="reveal rounded-2xl bg-cream p-6">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-navy text-cyan">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d={pillar.icon} stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <h3 class="mt-4 font-heading font-bold text-navy">{pillar.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted">{pillar.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-navy py-24 text-white">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-5 lg:grid-cols-2 lg:px-8">
+      <div class="reveal order-2 lg:order-1">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">Le formateur</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold balance lg:text-4xl">KOKO Landry</h2>
+        <p class="mt-5 leading-relaxed text-white/70">
+          Fondateur de PROcréal et Consultant Formateur agréé FDFP, KOKO Landry accompagne depuis 2023 plusieurs
+          promotions de dessinateurs projeteurs et d'assistants architectes vers une maîtrise opérationnelle
+          d'ArchiCAD et d'AutoCAD. Sa pédagogie repose sur trois principes : 100% pratique, petits groupes,
+          transmission directe de l'expérience terrain.
+        </p>
+        <div class="mt-8 grid grid-cols-3 gap-4">
+          <StatsCounter value={3} suffix="+" label="ans d'expérience" />
+          <StatsCounter value={4} label="promotions formées" />
+          <StatsCounter value={2} label="logiciels certifiés" />
+        </div>
+        <a
+          href={localizePath('/a-propos', lang)}
+          class="mt-8 inline-flex rounded-full bg-cyan px-7 py-3 font-semibold text-white transition-transform hover:scale-105"
+        >
+          {t('cta.learnMore')}
+        </a>
+      </div>
+      <div class="reveal order-1 lg:order-2">
+        <img
+          src="https://placehold.co/600x720/071c4a/3DA9E0?text=KOKO+Landry"
+          alt="KOKO Landry, fondateur de PROcréal"
+          class="mx-auto w-full max-w-sm rounded-2xl object-cover shadow-2xl"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-cream py-24">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">{t('common.testimonials')}</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Ils ont suivi nos formations</h2>
+      </div>
+      <div class="mt-12">
+        <TestimonialSlider testimonials={testimonials} />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-24">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">{t('nav.galerie')}</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">La vie du centre</h2>
+      </div>
+      <a href={localizePath('/galerie', lang)} class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        {galleryPreview.map((image) => (
+          <span class="reveal block aspect-square overflow-hidden rounded-xl">
+            <img src={image.src} alt="" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
+          </span>
+        ))}
+      </a>
+      <div class="reveal mt-10 text-center">
+        <a
+          href={localizePath('/galerie', lang)}
+          class="inline-flex rounded-full border border-navy/15 px-7 py-3 font-semibold text-navy transition-colors hover:bg-navy hover:text-white"
+        >
+          {t('cta.viewGallery')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-cream py-24">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">{t('nav.blog')}</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Actualités & conseils</h2>
+      </div>
+      <div class="mt-12 grid gap-8 sm:grid-cols-3">
+        {latestPosts.map((post) => <BlogCard post={post} lang={lang} />)}
+      </div>
+      <div class="reveal mt-10 text-center">
+        <a
+          href={localizePath('/blog', lang)}
+          class="inline-flex rounded-full border border-navy/15 px-7 py-3 font-semibold text-navy transition-colors hover:bg-navy hover:text-white"
+        >
+          {t('cta.readAll')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    lang={lang}
+    eyebrow="Prêt à passer à l'action ?"
+    title="Inscrivez-vous à la prochaine session PROcréal"
+    subtitle="Laissez votre email pour recevoir les prochaines dates de session, ou écrivez-nous directement sur WhatsApp."
+    primaryLabel={t('cta.registerNow')}
+    primaryHref="/inscription"
+    secondaryLabel={t('cta.whatsapp')}
+    secondaryHref={`https://wa.me/2250749817621?text=${encodeURIComponent(t('whatsapp.default'))}`}
+  />
+</BaseLayout>

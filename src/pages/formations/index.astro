@@ -1,0 +1,121 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import FormationCard from '../../components/FormationCard.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+
+const formations = (await getCollection('formations')).sort(
+  (a, b) => (a.data.startDate || '9999').localeCompare(b.data.startDate || '9999')
+);
+
+const domains = [
+  { value: 'all', label: 'Toutes' },
+  { value: 'cao-dao', label: 'CAO/DAO' },
+  { value: 'architecture', label: 'Architecture' },
+  { value: 'btp', label: 'BTP' },
+];
+---
+
+<PageLayout
+  title="Toutes nos formations CAO/DAO, Architecture & BTP"
+  description="Catalogue complet des formations PROcréal à Abidjan : cours du soir, masterclass ArchiCAD avancée, dessinateur projeteur 3D et offres spéciales ArchiCAD."
+  heading="Nos formations"
+  subheading="ArchiCAD, AutoCAD, dessin d'architecture et métiers du BTP — choisissez le format qui correspond à votre rythme."
+  breadcrumb={[
+    { name: 'Accueil', url: '/' },
+    { name: t('nav.formations'), url: '/formations' },
+  ]}
+>
+  <section class="bg-cream py-16">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="reveal flex flex-wrap items-center justify-between gap-4">
+        <div data-domain-filters class="flex flex-wrap gap-2">
+          {domains.map((domain, index) => (
+            <button
+              type="button"
+              data-domain-filter={domain.value}
+              class:list={[
+                'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
+                index === 0 ? 'border-navy bg-navy text-white' : 'border-navy/15 text-navy hover:bg-navy hover:text-white',
+              ]}
+            >
+              {domain.label}
+            </button>
+          ))}
+        </div>
+        <label class="flex items-center gap-2 text-sm text-muted">
+          {t('common.nextSession')}
+          <select data-sort-select class="rounded-lg border border-navy/15 bg-white px-3 py-2 text-sm text-navy focus:border-cyan focus:outline-none">
+            <option value="asc">Plus proche</option>
+            <option value="desc">Plus lointaine</option>
+          </select>
+        </label>
+      </div>
+
+      <div data-formations-grid class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {formations.map((formation) => (
+          <div data-formation-item data-domain={formation.data.domain} data-start-date={formation.data.startDate || ''}>
+            <FormationCard formation={formation} lang={lang} />
+          </div>
+        ))}
+      </div>
+      <p data-empty-state class="reveal mt-10 hidden text-center text-sm text-muted">
+        Aucune formation ne correspond à ce filtre pour le moment.
+      </p>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  function bindFormationFilters() {
+    const grid = document.querySelector('[data-formations-grid]');
+    if (!grid) return;
+    const items = [...grid.querySelectorAll('[data-formation-item]')];
+    const filterButtons = document.querySelectorAll('[data-domain-filter]');
+    const sortSelect = document.querySelector('[data-sort-select]');
+    const emptyState = document.querySelector('[data-empty-state]');
+    let activeDomain = 'all';
+
+    function applyFilters() {
+      let visibleCount = 0;
+      items.forEach((item) => {
+        const matches = activeDomain === 'all' || item.dataset.domain === activeDomain;
+        item.classList.toggle('hidden', !matches);
+        if (matches) visibleCount += 1;
+      });
+      emptyState?.classList.toggle('hidden', visibleCount > 0);
+    }
+
+    function applySort() {
+      const direction = sortSelect?.value === 'desc' ? -1 : 1;
+      const sorted = [...items].sort((a, b) => {
+        const dateA = a.dataset.startDate || '9999';
+        const dateB = b.dataset.startDate || '9999';
+        return dateA.localeCompare(dateB) * direction;
+      });
+      sorted.forEach((item) => grid.appendChild(item));
+    }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeDomain = button.dataset.domainFilter;
+        filterButtons.forEach((btn) => {
+          const isActive = btn === button;
+          btn.classList.toggle('bg-navy', isActive);
+          btn.classList.toggle('text-white', isActive);
+          btn.classList.toggle('border-navy', isActive);
+          btn.classList.toggle('text-navy', !isActive);
+          btn.classList.toggle('border-navy/15', !isActive);
+        });
+        applyFilters();
+      });
+    });
+
+    sortSelect?.addEventListener('change', applySort);
+    applyFilters();
+  }
+  document.addEventListener('astro:page-load', bindFormationFilters);
+</script>

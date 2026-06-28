@@ -1,0 +1,160 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import StatsCounter from '../components/StatsCounter.astro';
+import { personSchema } from '../lib/seo';
+import { useTranslations } from '../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+
+const values = [
+  {
+    title: 'Exigence pratique',
+    text: "Chaque heure de cours se traduit par un geste, un plan ou une maquette concrète — pas seulement de la théorie.",
+  },
+  {
+    title: 'Proximité pédagogique',
+    text: 'Des groupes volontairement restreints pour que chaque apprenant reste suivi individuellement, du premier au dernier jour.',
+  },
+  {
+    title: 'Insertion professionnelle',
+    text: "Former ne suffit pas : nous accompagnons aussi nos diplômés vers une vraie sortie professionnelle.",
+  },
+];
+
+const timeline = [
+  { year: '2023', text: 'Fondation de PROcréal à Cocody Faya par KOKO Landry.' },
+  { year: '2023', text: '1ère promotion de Dessinateurs Projeteurs 3D.' },
+  { year: '2024', text: "Lancement du format Cours du soir pour les actifs et étudiants." },
+  { year: '2025', text: 'Obtention de l’agrément FDFP et 3e promotion certifiée.' },
+  { year: '2026', text: "Première Masterclass ArchiCAD Avancée, édition spéciale 36 ans." },
+];
+---
+
+<PageLayout
+  title="À propos de PROcréal"
+  description="Découvrez l'histoire de PROcréal, centre de formation continue à Abidjan fondé par KOKO Landry, sa mission, ses valeurs et son équipe."
+  heading="À propos de PROcréal"
+  subheading="Un centre de formation né d'une conviction : la maîtrise technique change des trajectoires professionnelles."
+  breadcrumb={[
+    { name: 'Accueil', url: '/' },
+    { name: t('nav.aPropos'), url: '/a-propos' },
+  ]}
+  jsonLd={[personSchema()]}
+>
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-3xl px-5 text-center lg:px-8">
+      <p class="reveal text-sm font-semibold uppercase tracking-wide text-cyan">Notre histoire</p>
+      <h2 class="reveal mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Depuis 2023, à Abidjan</h2>
+      <p class="reveal mt-5 leading-relaxed text-muted">
+        PROcréal naît à Cocody Faya d'un constat simple : trop de talents ivoiriens du dessin et de l'architecture
+        restent bloqués au niveau utilisateur, faute d'un accompagnement réellement pratique. KOKO Landry, formateur
+        agréé FDFP, fonde le centre pour combler cet écart — petits groupes, exercices réels, suivi individuel.
+        Depuis, plusieurs promotions de dessinateurs projeteurs et d'assistants architectes sont sorties opérationnelles,
+        prêtes pour le marché du BTP et de l'architecture en Côte d'Ivoire.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-cream py-20">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">Mission, vision, valeurs</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Ce qui nous guide</h2>
+      </div>
+      <div class="mt-12 grid gap-8 sm:grid-cols-3">
+        {values.map((value) => (
+          <div class="reveal rounded-2xl bg-white p-7 shadow-sm ring-1 ring-navy/5">
+            <h3 class="font-heading text-lg font-bold text-navy">{value.title}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-muted">{value.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="landry" class="bg-navy py-24 text-white">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-5 lg:grid-cols-2 lg:px-8">
+      <div class="reveal">
+        <img
+          src="https://placehold.co/640x760/071c4a/3DA9E0?text=KOKO+Landry"
+          alt="KOKO Landry, fondateur de PROcréal"
+          class="w-full rounded-2xl object-cover shadow-2xl"
+        />
+      </div>
+      <div class="reveal">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">Le formateur</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold balance lg:text-4xl">KOKO Landry</h2>
+        <p class="mt-5 leading-relaxed text-white/70">
+          KOKO Landry est le fondateur de PROcréal et le formateur principal de l'institut. Consultant Formateur agréé
+          FDFP (Fonds de Développement de la Formation Professionnelle), il a accompagné depuis 2023 plusieurs
+          promotions de dessinateurs projeteurs et d'assistants architectes vers une maîtrise opérationnelle
+          d'ArchiCAD et d'AutoCAD.
+        </p>
+        <p class="mt-4 leading-relaxed text-white/70">
+          Sa pédagogie repose sur trois principes : 100% pratique, petits groupes, transmission directe de
+          l'expérience terrain. Il enseigne ce qu'il pratique : les workflows, les raccourcis, les astuces qu'on
+          n'apprend pas dans les manuels.
+        </p>
+        <p class="mt-4 leading-relaxed text-white/70">
+          À travers PROcréal, sa mission est claire — former la prochaine génération d'experts du BTP et de
+          l'architecture en Côte d'Ivoire, en alliant rigueur technique, esprit entrepreneurial et insertion
+          professionnelle.
+        </p>
+        <div class="mt-8 grid grid-cols-3 gap-4">
+          <StatsCounter value={3} suffix="+" label="ans d'expérience" />
+          <StatsCounter value={4} label="promotions formées" />
+          <StatsCounter value={1} label="agrément FDFP" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">L'équipe</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Notre équipe</h2>
+      </div>
+      <div class="reveal mx-auto mt-10 max-w-md rounded-2xl border-2 border-dashed border-navy/15 p-10 text-center">
+        <p class="font-heading font-semibold text-navy">Nouveaux formateurs bientôt annoncés</p>
+        <p class="mt-2 text-sm text-muted">L'équipe PROcréal s'agrandit pour accompagner les prochaines promotions.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-cream py-20">
+    <div class="mx-auto max-w-3xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">Parcours</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Notre frise chronologique</h2>
+      </div>
+      <div class="mt-12 space-y-8 border-l-2 border-navy/15 pl-8">
+        {timeline.map((item) => (
+          <div class="reveal relative">
+            <span class="absolute -left-[2.55rem] flex h-5 w-5 items-center justify-center rounded-full bg-cyan ring-4 ring-cream"></span>
+            <p class="font-heading text-sm font-bold text-cyan">{item.year}</p>
+            <p class="mt-1 text-sm leading-relaxed text-ink">{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-4xl px-5 text-center lg:px-8">
+      <p class="reveal text-sm font-semibold uppercase tracking-wide text-cyan">Reconnaissance</p>
+      <h2 class="reveal mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Agréments & reconnaissances</h2>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2">
+        <div class="reveal rounded-2xl bg-cream p-8">
+          <p class="font-heading text-xl font-bold text-navy">Agréé FDFP</p>
+          <p class="mt-2 text-sm text-muted">Fonds de Développement de la Formation Professionnelle de Côte d'Ivoire.</p>
+        </div>
+        <div class="reveal rounded-2xl bg-cream p-8">
+          <p class="font-heading text-xl font-bold text-navy">Certifié ArchiCAD & AutoCAD</p>
+          <p class="mt-2 text-sm text-muted">Formateur certifié sur les deux logiciels de référence du secteur.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>

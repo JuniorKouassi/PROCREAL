@@ -1,0 +1,33 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { getLangFromUrl, localizePath } from '../i18n/utils';
+import { breadcrumbSchema } from '../lib/seo';
+
+const { title, description, heading = title, subheading, breadcrumb = [], jsonLd = [], image } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const crumbSchema = breadcrumb.length ? [breadcrumbSchema(breadcrumb)] : [];
+---
+
+<BaseLayout title={title} description={description} image={image} jsonLd={[...crumbSchema, ...jsonLd]}>
+  <section class="relative overflow-hidden bg-navy pb-16 pt-36 text-white lg:pb-24 lg:pt-44">
+    <div class="absolute inset-0 bg-gradient-to-br from-navy via-navy to-navy-dark"></div>
+    <div class="relative mx-auto max-w-5xl px-5 text-center lg:px-8">
+      {breadcrumb.length > 0 && (
+        <nav class="mb-4 flex flex-wrap justify-center gap-2 text-xs text-white/50">
+          {breadcrumb.map((item, index) => (
+            <span class="flex items-center gap-2">
+              {index > 0 && <span>/</span>}
+              <a href={localizePath(item.url, lang)} class="hover:text-white">
+                {item.name}
+              </a>
+            </span>
+          ))}
+        </nav>
+      )}
+      <h1 class="font-heading text-4xl font-bold leading-tight balance lg:text-5xl" data-hero-split>{heading}</h1>
+      {subheading && <p class="mx-auto mt-4 max-w-2xl text-white/70 lg:text-lg">{subheading}</p>}
+    </div>
+  </section>
+  <slot />
+</BaseLayout>

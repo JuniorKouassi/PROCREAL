@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { localizePath, useTranslations } from '../../i18n/utils';
+
+const lang = 'en';
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={t('nav.espaceApprenant')} description="The PROcréal student portal is coming soon." noindex={true}>
+  <section class="flex min-h-[70vh] items-center bg-navy py-32 text-white">
+    <div class="mx-auto max-w-xl px-5 text-center lg:px-8">
+      <span class="reveal inline-flex rounded-full bg-cyan/15 px-4 py-1.5 text-sm font-semibold text-cyan">
+        {t('common.comingSoon')}
+      </span>
+      <h1 class="reveal mt-5 font-heading text-3xl font-bold balance lg:text-4xl">{t('nav.espaceApprenant')}</h1>
+      <p class="reveal mt-4 text-white/70">
+        Our student intranet — course resources, progress tracking and replays — is under construction. Enrolled
+        students will be notified as soon as it opens.
+      </p>
+      <a
+        href={localizePath('/formations', lang)}
+        class="reveal mt-8 inline-flex rounded-full bg-cyan px-7 py-3.5 font-semibold text-white transition-transform hover:scale-105"
+      >
+        {t('cta.viewFormations')}
+      </a>
+    </div>
+  </section>
+</BaseLayout>

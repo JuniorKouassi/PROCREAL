@@ -1,0 +1,62 @@
+---
+const { images = [] } = Astro.props;
+---
+
+<div class="grid grid-cols-2 gap-4 [grid-auto-rows:160px] sm:grid-cols-3 lg:grid-cols-4 [&>*:nth-child(3n+1)]:row-span-2">
+  {images.map((image) => (
+    <button
+      type="button"
+      data-lightbox-trigger
+      data-lightbox-src={image.src}
+      data-lightbox-caption={image.caption}
+      data-gallery-item
+      data-category={image.category}
+      class="reveal group relative block h-full w-full overflow-hidden rounded-xl"
+    >
+      <img src={image.src} alt={image.caption || ''} loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+      <span class="absolute inset-0 bg-navy/0 transition-colors group-hover:bg-navy/20"></span>
+      {image.caption && (
+        <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/80 to-transparent p-3 text-left text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+          {image.caption}
+        </span>
+      )}
+    </button>
+  ))}
+</div>
+
+<div data-lightbox class="fixed inset-0 z-[100] hidden items-center justify-center bg-ink/90 p-6">
+  <button type="button" data-lightbox-close class="absolute right-5 top-5 text-white/80 transition-colors hover:text-white" aria-label="Close">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  </button>
+  <img data-lightbox-image src="" alt="" class="max-h-[85vh] max-w-full rounded-lg object-contain" />
+</div>
+
+<script>
+  function bindLightbox() {
+    const lightbox = document.querySelector('[data-lightbox]');
+    const image = lightbox?.querySelector('[data-lightbox-image]');
+    if (!lightbox || !image) return;
+
+    const close = () => {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+    };
+
+    document.querySelectorAll('[data-lightbox-trigger]').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        image.setAttribute('src', trigger.dataset.lightboxSrc);
+        image.setAttribute('alt', trigger.dataset.lightboxCaption || '');
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+      });
+    });
+
+    lightbox.querySelector('[data-lightbox-close]')?.addEventListener('click', close);
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) close();
+    });
+  }
+  document.addEventListener('astro:page-load', bindLightbox);
+</script>

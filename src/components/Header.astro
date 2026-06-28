@@ -1,0 +1,115 @@
+---
+import Logo from './Logo.astro';
+import LanguageSwitch from './LanguageSwitch.astro';
+import { useTranslations, localizePath } from '../i18n/utils';
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const links = [
+  { href: '/formations', label: t('nav.formations') },
+  { href: '/cours-du-soir', label: t('nav.coursDuSoir') },
+  { href: '/masterclass', label: t('nav.masterclass') },
+  { href: '/a-propos', label: t('nav.aPropos') },
+  { href: '/galerie', label: t('nav.galerie') },
+  { href: '/blog', label: t('nav.blog') },
+  { href: '/contact', label: t('nav.contact') },
+];
+
+const whatsappHref = `https://wa.me/2250749817621?text=${encodeURIComponent(t('whatsapp.default'))}`;
+---
+<header data-site-header class="fixed top-0 inset-x-0 z-40">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+    <a href={localizePath('/', lang)} class="relative z-10">
+      <Logo variant="auto" />
+    </a>
+
+    <nav class="hidden items-center gap-7 lg:flex">
+      {links.map((link) => (
+        <a
+          href={localizePath(link.href, lang)}
+          class="nav-link font-body text-sm font-medium text-[var(--header-fg)] transition-opacity hover:opacity-70"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="hidden items-center gap-5 lg:flex">
+      <LanguageSwitch lang={lang} class="text-[var(--header-fg)]" />
+      <a
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-[var(--header-fg)] transition-opacity hover:opacity-70"
+        aria-label="WhatsApp"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.45 5.13L2 22l5.13-1.55a9.84 9.84 0 0 0 4.91 1.31c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm5.8 14.07c-.24.68-1.39 1.32-1.92 1.4-.49.08-1.1.11-1.78-.11-.41-.13-.94-.3-1.62-.6-2.85-1.23-4.71-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08 1-2.37.24-.27.55-.34.74-.34.18 0 .37.002.53.01.17.008.4-.065.62.47.24.57.81 1.98.88 2.12.08.15.13.32.02.51-.1.19-.16.31-.31.48-.16.17-.33.38-.47.51-.16.15-.32.31-.14.62.18.31.83 1.37 1.79 2.22 1.23 1.1 2.27 1.44 2.59 1.6.32.16.5.13.69-.08.2-.21.84-.97 1.06-1.31.22-.34.44-.28.74-.17.3.11 1.89.89 2.21 1.05.32.16.53.24.61.38.08.13.08.78-.16 1.46Z" />
+        </svg>
+      </a>
+      <a
+        href={localizePath('/inscription', lang)}
+        class="rounded-full bg-cyan px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105"
+      >
+        {t('cta.register')}
+      </a>
+    </div>
+
+    <button
+      type="button"
+      data-mobile-menu-toggle
+      class="relative z-10 flex h-10 w-10 items-center justify-center lg:hidden"
+      aria-label="Menu"
+      aria-expanded="false"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="text-[var(--header-fg)]">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <div data-mobile-menu class="hidden flex-col gap-1 bg-white px-5 pb-6 pt-2 shadow-lg lg:hidden">
+    {links.map((link) => (
+      <a href={localizePath(link.href, lang)} class="rounded-lg px-3 py-3 font-medium text-navy hover:bg-cream">
+        {link.label}
+      </a>
+    ))}
+    <a href={localizePath('/inscription', lang)} class="mt-2 rounded-full bg-cyan px-5 py-3 text-center font-semibold text-white">
+      {t('cta.register')}
+    </a>
+    <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class="mt-1 rounded-full border border-navy/15 px-5 py-3 text-center font-semibold text-navy">
+      {t('cta.whatsapp')}
+    </a>
+    <LanguageSwitch lang={lang} class="mt-3 justify-center text-navy" />
+  </div>
+</header>
+
+<style>
+  header[data-site-header] {
+    --header-fg: white;
+    background: linear-gradient(to bottom, rgba(10, 42, 107, 0.55), transparent);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  header[data-site-header].is-scrolled {
+    --header-fg: #0a2a6b;
+    background-color: white;
+    box-shadow: 0 1px 0 rgba(11, 18, 32, 0.06);
+  }
+  header[data-site-header].menu-open [data-mobile-menu] {
+    display: flex;
+  }
+</style>
+
+<script>
+  function bindMobileMenu() {
+    const header = document.querySelector('[data-site-header]');
+    const toggle = header?.querySelector('[data-mobile-menu-toggle]');
+    toggle?.addEventListener('click', () => {
+      const isOpen = header.classList.toggle('menu-open');
+      toggle.setAttribute('aria-expanded', String(isOpen));
+      header.classList.toggle('is-scrolled', isOpen || window.scrollY > 50);
+    });
+  }
+  document.addEventListener('astro:page-load', bindMobileMenu);
+</script>

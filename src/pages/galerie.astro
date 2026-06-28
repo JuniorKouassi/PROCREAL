@@ -1,0 +1,99 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import GalleryGrid from '../components/GalleryGrid.astro';
+import { useTranslations } from '../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+
+const categories = ['Toutes', 'Promotions', 'Remises de diplômes', 'Cours', 'Événements'];
+
+const palette = [
+  ['0A2A6B', '3DA9E0'],
+  ['3DA9E0', '0A2A6B'],
+  ['0A2A6B', 'F5C518'],
+  ['071c4a', '3DA9E0'],
+];
+
+const images = [
+  { category: 'Promotions', caption: '4e promotion — Dessinateurs Projeteurs 3D' },
+  { category: 'Cours', caption: 'Atelier AutoCAD, Cours du soir' },
+  { category: 'Remises de diplômes', caption: 'Remise des attestations FDFP' },
+  { category: 'Promotions', caption: '3e promotion — Assistants Architectes' },
+  { category: 'Événements', caption: 'Masterclass ArchiCAD, édition 36 ans' },
+  { category: 'Cours', caption: 'Travaux pratiques ArchiCAD' },
+  { category: 'Remises de diplômes', caption: 'Photo de groupe — diplômés 2025' },
+  { category: 'Événements', caption: 'Coupure de gâteau, anniversaire PROcréal' },
+  { category: 'Cours', caption: 'Session du soir, Module 2 AutoCAD' },
+  { category: 'Promotions', caption: 'Offre spéciale ArchiCAD 20h' },
+  { category: 'Événements', caption: 'Networking entre anciens élèves' },
+  { category: 'Remises de diplômes', caption: 'Diplômés Cours du soir 2025' },
+].map((image, index) => {
+  const [from, to] = palette[index % palette.length];
+  return {
+    ...image,
+    src: `https://placehold.co/600x${index % 3 === 0 ? 750 : 600}/${from}/${to}?text=${encodeURIComponent(image.category)}`,
+  };
+});
+---
+
+<PageLayout
+  title="Galerie — Promotions, diplômes et événements PROcréal"
+  description="Découvrez les promotions, remises de diplômes, cours et événements du centre de formation PROcréal à Abidjan."
+  heading="Galerie"
+  subheading="La vie du centre : promotions, remises de diplômes, cours et événements."
+  breadcrumb={[
+    { name: 'Accueil', url: '/' },
+    { name: t('nav.galerie'), url: '/galerie' },
+  ]}
+>
+  <section class="bg-cream py-16">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div data-gallery-filters class="reveal flex flex-wrap gap-2">
+        {categories.map((category, index) => (
+          <button
+            type="button"
+            data-category-filter={category === 'Toutes' ? 'all' : category}
+            class:list={[
+              'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
+              index === 0 ? 'border-navy bg-navy text-white' : 'border-navy/15 text-navy hover:bg-navy hover:text-white',
+            ]}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      <div class="mt-10">
+        <GalleryGrid images={images} />
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  function bindGalleryFilters() {
+    const filters = document.querySelectorAll('[data-category-filter]');
+    const items = document.querySelectorAll('[data-gallery-item]');
+    if (!filters.length || !items.length) return;
+
+    filters.forEach((button) => {
+      button.addEventListener('click', () => {
+        const category = button.dataset.categoryFilter;
+        filters.forEach((btn) => {
+          const isActive = btn === button;
+          btn.classList.toggle('bg-navy', isActive);
+          btn.classList.toggle('text-white', isActive);
+          btn.classList.toggle('border-navy', isActive);
+          btn.classList.toggle('text-navy', !isActive);
+          btn.classList.toggle('border-navy/15', !isActive);
+        });
+        items.forEach((item) => {
+          const matches = category === 'all' || item.dataset.category === category;
+          item.classList.toggle('hidden', !matches);
+        });
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', bindGalleryFilters);
+</script>

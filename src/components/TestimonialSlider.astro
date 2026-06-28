@@ -1,0 +1,54 @@
+---
+import Testimonial from './Testimonial.astro';
+
+const { testimonials = [] } = Astro.props;
+---
+
+<div class="relative">
+  <div
+    data-slider
+    class="flex gap-6 overflow-x-auto scroll-smooth pb-4 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+  >
+    {testimonials.map((item) => (
+      <div class="reveal w-[85%] shrink-0 snap-start sm:w-[45%] lg:w-[31%]">
+        <Testimonial name={item.name} role={item.role} quote={item.quote} avatar={item.avatar} />
+      </div>
+    ))}
+  </div>
+  <div class="mt-4 flex justify-center gap-3">
+    <button
+      type="button"
+      data-slider-prev
+      class="flex h-10 w-10 items-center justify-center rounded-full border border-navy/15 text-navy transition-colors hover:bg-navy hover:text-white"
+      aria-label="Previous"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <button
+      type="button"
+      data-slider-next
+      class="flex h-10 w-10 items-center justify-center rounded-full border border-navy/15 text-navy transition-colors hover:bg-navy hover:text-white"
+      aria-label="Next"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  function bindSliders() {
+    document.querySelectorAll('[data-slider]').forEach((slider) => {
+      const wrapper = slider.parentElement;
+      const prev = wrapper?.querySelector('[data-slider-prev]');
+      const next = wrapper?.querySelector('[data-slider-next]');
+      const scrollAmount = () => slider.clientWidth * 0.9;
+      prev?.addEventListener('click', () => slider.scrollBy({ left: -scrollAmount(), behavior: 'smooth' }));
+      next?.addEventListener('click', () => slider.scrollBy({ left: scrollAmount(), behavior: 'smooth' }));
+    });
+  }
+  document.addEventListener('astro:page-load', bindSliders);
+</script>

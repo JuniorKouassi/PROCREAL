@@ -1,0 +1,126 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Accordion from '../components/Accordion.astro';
+import CTASection from '../components/CTASection.astro';
+import { courseSchema } from '../lib/seo';
+import { localizePath, useTranslations } from '../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+const entry = await getEntry('formations', 'cours-du-soir');
+const data = entry.data;
+
+const moduleDescriptions = {
+  "Comprendre le dessin d'architecture": "Lecture de plans, normes de représentation et bases du dessin technique à la main avant le numérique.",
+  AutoCAD: "Prise en main complète d'AutoCAD pour produire des plans 2D précis et normés.",
+  ArchiCAD: 'Passage à la maquette numérique 3D : murs, dalles, toitures, menuiseries et documentation automatique.',
+};
+function moduleTopic(label) {
+  const parts = label.split('—');
+  return parts[parts.length - 1].trim();
+}
+const moduleItems = data.modules.map((label) => ({
+  title: label,
+  content: moduleDescriptions[moduleTopic(label)] || 'Apprentissage encadré et mise en pratique guidée sur ce module.',
+}));
+
+const whatsappHref = `https://wa.me/2250749817621?text=${encodeURIComponent('Bonjour PROcréal, je souhaite des informations sur le Cours du soir.')}`;
+const registerHref = `${localizePath('/inscription', lang)}?formation=cours-du-soir`;
+---
+
+<BaseLayout
+  title="Cours du soir — Dessin & CAO/DAO à Abidjan"
+  description="Cours du soir architecture Abidjan : 70 heures, 3 soirs par semaine, pour passer du dessin manuel à AutoCAD et ArchiCAD sans quitter votre emploi."
+  jsonLd={[courseSchema(data, lang, '/cours-du-soir')]}
+>
+  <Hero
+    lang={lang}
+    variant="formation"
+    eyebrow="Formation phare"
+    title="Cours du soir — Dessin & CAO/DAO"
+    subtitle="Trois soirs par semaine, passez du croquis papier à la maîtrise d'AutoCAD et ArchiCAD sans toucher à votre emploi du jour."
+    primaryLabel={t('cta.registerNow')}
+    primaryHref={registerHref}
+    secondaryLabel={t('cta.whatsapp')}
+    secondaryHref={whatsappHref}
+  />
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-3xl px-5 text-center lg:px-8">
+      <p class="reveal text-sm font-semibold uppercase tracking-wide text-cyan">La promesse</p>
+      <h2 class="reveal mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">
+        Une compétence CAO/DAO solide, sans interrompre votre activité
+      </h2>
+      <p class="reveal mt-5 leading-relaxed text-muted">
+        Conçu pour les emplois du temps chargés, ce parcours en trois modules vous fait passer du croquis papier à
+        un dossier technique complet — soir après soir, sans sacrifier votre activité professionnelle ou vos études.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-cream py-20">
+    <div class="mx-auto max-w-4xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">{t('common.modules')}</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Les 3 modules du parcours</h2>
+      </div>
+      <div class="mt-12">
+        <Accordion items={moduleItems} />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-4xl px-5 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-wide text-cyan">{t('common.schedule')}</p>
+        <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Planning de la session</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { label: t('common.schedule'), value: data.schedule },
+          { label: t('common.duration'), value: data.duration },
+          { label: t('common.nextSession'), value: new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(data.startDate)) },
+          { label: t('common.location'), value: data.location },
+        ].map((item) => (
+          <div class="reveal rounded-2xl bg-cream p-6 text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-muted">{item.label}</p>
+            <p class="mt-2 font-heading text-sm font-bold text-navy">{item.value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-navy py-20 text-white">
+    <div class="mx-auto max-w-3xl px-5 text-center lg:px-8">
+      <p class="reveal text-sm font-semibold uppercase tracking-wide text-cyan">{t('common.price')}</p>
+      <h2 class="reveal mt-3 font-heading text-4xl font-bold lg:text-5xl">
+        {data.price.toLocaleString('fr-FR')} {data.currency}
+      </h2>
+      <p class="reveal mt-2 text-white/70">
+        + {data.registration.toLocaleString('fr-FR')} {data.currency} {t('common.registrationFee').toLowerCase()}
+      </p>
+      <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href={registerHref} class="rounded-full bg-cyan px-7 py-3.5 font-semibold text-white transition-transform hover:scale-105">
+          {t('cta.registerNow')}
+        </a>
+        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/30 px-7 py-3.5 font-semibold text-white transition-colors hover:bg-white/10">
+          {t('cta.whatsapp')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    lang={lang}
+    title="Prochaine session le 6 mai 2026"
+    subtitle="Les places sont limitées pour garantir un suivi individuel. Inscrivez-vous dès maintenant."
+    primaryLabel={t('cta.registerNow')}
+    primaryHref={registerHref}
+    secondaryLabel={t('cta.viewDetails')}
+    secondaryHref={localizePath('/formations/cours-du-soir', lang)}
+  />
+</BaseLayout>

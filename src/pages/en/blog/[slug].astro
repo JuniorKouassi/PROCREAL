@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import { localizePath, useTranslations } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const lang = 'en';
+const t = useTranslations(lang);
+const path = `/en/blog/${post.id}`;
+
+const localizedPost = {
+  ...post.data,
+  title: post.data.title_en,
+  excerpt: post.data.excerpt_en,
+};
+---
+
+<BlogLayout post={localizedPost} path={path}>
+  <p>{post.data.excerpt_en}</p>
+  <div class="not-prose mt-8 rounded-2xl bg-cyan/10 p-5 text-sm text-navy ring-1 ring-cyan/20">
+    {t('common.languageComingSoon')} —
+    <a href={localizePath(`/blog/${post.id}`, 'fr')} class="font-semibold underline">{t('common.viewInFrench')}</a>
+  </div>
+</BlogLayout>

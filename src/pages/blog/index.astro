@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const lang = 'fr';
+const t = useTranslations(lang);
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const categoryLabels = {
+  'conseils-metier': 'Conseils métier',
+  'etudes-de-cas': 'Études de cas',
+  actualites: 'Actualités PROcréal',
+  temoignages: 'Témoignages',
+};
+const categories = ['all', ...Object.keys(categoryLabels)];
+---
+
+<PageLayout
+  title="Blog — Conseils, actualités et études de cas PROcréal"
+  description="Conseils métier, études de cas et actualités du centre de formation PROcréal à Abidjan : ArchiCAD, AutoCAD et métiers du BTP."
+  heading="Blog & actualités"
+  subheading="Conseils métier, études de cas et actualités du centre — enrichis au fil des sessions."
+  breadcrumb={[
+    { name: 'Accueil', url: '/' },
+    { name: t('nav.blog'), url: '/blog' },
+  ]}
+>
+  <section class="bg-cream py-16">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div data-blog-filters class="reveal flex flex-wrap gap-2">
+        {categories.map((category, index) => (
+          <button
+            type="button"
+            data-category-filter={category}
+            class:list={[
+              'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
+              index === 0 ? 'border-navy bg-navy text-white' : 'border-navy/15 text-navy hover:bg-navy hover:text-white',
+            ]}
+          >
+            {category === 'all' ? 'Tous les articles' : categoryLabels[category]}
+          </button>
+        ))}
+      </div>
+
+      <div data-blog-grid class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => (
+          <div data-blog-item data-category={post.data.category}>
+            <BlogCard post={post} lang={lang} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  function bindBlogFilters() {
+    const filters = document.querySelectorAll('[data-category-filter]');
+    const items = document.querySelectorAll('[data-blog-item]');
+    if (!filters.length || !items.length) return;
+
+    filters.forEach((button) => {
+      button.addEventListener('click', () => {
+        const category = button.dataset.categoryFilter;
+        filters.forEach((btn) => {
+          const isActive = btn === button;
+          btn.classList.toggle('bg-navy', isActive);
+          btn.classList.toggle('text-white', isActive);
+          btn.classList.toggle('border-navy', isActive);
+          btn.classList.toggle('text-navy', !isActive);
+          btn.classList.toggle('border-navy/15', !isActive);
+        });
+        items.forEach((item) => {
+          const matches = category === 'all' || item.dataset.category === category;
+          item.classList.toggle('hidden', !matches);
+        });
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', bindBlogFilters);
+</script>

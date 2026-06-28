@@ -1,0 +1,72 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import { organizationSchema } from '../lib/seo';
+import { getLangFromUrl, switchLocalePath } from '../i18n/utils';
+import '../styles/global.css';
+
+const {
+  title,
+  description,
+  image = '/img/og-default.jpg',
+  noindex = false,
+  jsonLd = [],
+  bodyClass = '',
+} = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const frUrl = new URL(switchLocalePath(Astro.url.pathname, 'fr'), Astro.site);
+const enUrl = new URL(switchLocalePath(Astro.url.pathname, 'en'), Astro.site);
+const schemas = [organizationSchema(), ...jsonLd];
+const pageTitle = `${title} — PROcréal`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    <link rel="alternate" hreflang="fr" href={frUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={frUrl} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PROcréal" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'fr_FR'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, Astro.site)} />
+
+    {schemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
+
+    <ClientRouter />
+  </head>
+  <body class={bodyClass}>
+    <Header lang={lang} />
+    <main>
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <WhatsAppFloat lang={lang} />
+    <script>
+      import '../lib/animations.js';
+    </script>
+  </body>
+</html>

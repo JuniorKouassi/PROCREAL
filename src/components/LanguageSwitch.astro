@@ -7,11 +7,19 @@ const frPath = switchLocalePath(pathname, 'fr');
 const enPath = switchLocalePath(pathname, 'en');
 ---
 <div class={`flex items-center gap-1.5 text-sm font-semibold ${className}`}>
-  <a href={frPath} class={lang === 'fr' ? 'opacity-100' : 'opacity-50 hover:opacity-100'} aria-current={lang === 'fr' ? 'page' : undefined}>
-    FR
+  <a
+    href={frPath}
+    class={`flex items-center gap-1.5 ${lang === 'fr' ? 'opacity-100' : 'opacity-50 hover:opacity-100'}`}
+    aria-current={lang === 'fr' ? 'page' : undefined}
+  >
+    <span class="fi fi-fr rounded-[2px]" aria-hidden="true"></span> FR
   </a>
   <span class="opacity-30">/</span>
-  <a href={enPath} class={lang === 'en' ? 'opacity-100' : 'opacity-50 hover:opacity-100'} aria-current={lang === 'en' ? 'page' : undefined}>
-    EN
+  <a
+    href={enPath}
+    class={`flex items-center gap-1.5 ${lang === 'en' ? 'opacity-100' : 'opacity-50 hover:opacity-100'}`}
+    aria-current={lang === 'en' ? 'page' : undefined}
+  >
+    <span class="fi fi-gb rounded-[2px]" aria-hidden="true"></span> EN
   </a>
 </div>

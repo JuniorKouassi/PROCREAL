@@ -53,13 +53,33 @@ src/
 | `og-default.jpg` | référencé par défaut dans `BaseLayout.astro` (`/img/og-default.jpg`) | Déposer une image 1200×630 dans `public/img/og-default.jpg` |
 | Webhook formulaires | `.env.local` → `PUBLIC_FORM_WEBHOOK_URL` | URL Google Apps Script réelle |
 | Numéro WhatsApp | `.env.local` → `PUBLIC_WHATSAPP_NUMBER` | Numéro confirmé si différent |
-| Numéros Wave / Orange Money | Sidebar fiche formation, page Inscription | À fournir par Landry (actuellement juste des badges sans numéro) |
+| Clés API Wave / Orange Money | `.env.local` (voir section Paiements) | À obtenir auprès de Wave Business et du Orange Developer Center |
 | Réseaux sociaux | `src/components/Footer.astro` | Vraies URLs Facebook/Instagram/LinkedIn |
 | Formateurs de l'équipe | `src/pages/a-propos.astro` (section "Notre équipe") | Remplacer le placeholder dès qu'un formateur est annoncé |
 
 ## Formulaires
 
 Les formulaires Contact et Inscription envoient un `POST` JSON vers `PUBLIC_FORM_WEBHOOK_URL` (Google Apps Script). Si l'appel échoue (webhook pas encore configuré), le formulaire d'inscription bascule quand même sur WhatsApp avec un message pré-rempli.
+
+## Paiements (Wave / Orange Money)
+
+Le formulaire d'inscription propose Wave, Orange Money et WhatsApp comme moyens de paiement. Wave et Orange Money sont câblés via deux **Cloudflare Pages Functions** (`functions/api/payments/wave-checkout.js` et `orange-money-checkout.js`) qui créent une session de paiement côté serveur et redirigent le client vers la page de paiement du fournisseur.
+
+**Tant qu'aucune clé API n'est configurée, ces fonctions répondent `503 not_configured` et le formulaire bascule automatiquement sur le flux WhatsApp actuel — rien ne casse.**
+
+Pour activer les vrais paiements :
+
+1. **Wave** : créer un compte marchand sur [business.wave.com](https://business.wave.com), récupérer la clé API Checkout, puis définir `WAVE_API_KEY` dans les variables d'environnement Cloudflare Pages.
+2. **Orange Money** : créer un compte partenaire sur le [Orange Developer Center](https://developer.orange.com), récupérer `client_id`/`client_secret` et la clé marchande, puis définir `ORANGE_MONEY_CLIENT_ID`, `ORANGE_MONEY_CLIENT_SECRET` et `ORANGE_MONEY_MERCHANT_KEY`.
+
+⚠️ Le contrat exact de l'API Orange Money (segment de région dans l'URL, noms des champs) varie selon les pays et accords partenaires — celui implémenté ici suit le flux OAuth2 + webpayment habituel d'Orange, mais **doit être vérifié avec la documentation réelle fournie par Orange CI** avant mise en production. Wave, en revanche, a une API Checkout publique stable et bien documentée.
+
+Pour tester les fonctions en local (elles ne tournent pas avec `npm run dev`, seulement via Wrangler) :
+
+```sh
+npm run build
+npx wrangler pages dev ./dist
+```
 
 ## Déploiement sur Cloudflare Pages
 

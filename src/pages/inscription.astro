@@ -7,7 +7,12 @@ import { useTranslations } from '../i18n/utils';
 const lang = 'fr';
 const t = useTranslations(lang);
 
-const formations = (await getCollection('formations')).map((entry) => ({ slug: entry.id, title: entry.data.title }));
+const formations = (await getCollection('formations')).map((entry) => ({
+  slug: entry.id,
+  title: entry.data.title,
+  price: entry.data.price,
+  currency: entry.data.currency,
+}));
 ---
 
 <PageLayout

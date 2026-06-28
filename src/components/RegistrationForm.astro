@@ -24,6 +24,8 @@ const paymentMethods = ['Wave', 'Orange Money', 'WhatsApp'];
               name="formation"
               value={formation.slug}
               data-title={formation.title}
+              data-amount={formation.price}
+              data-currency={formation.currency}
               required
               checked={formation.slug === preselected}
               class="accent-cyan"
@@ -77,6 +79,9 @@ const paymentMethods = ['Wave', 'Orange Money', 'WhatsApp'];
 
 <script>
   import { submitForm, whatsappUrl } from '../lib/form.js';
+  import { initiateCheckout } from '../lib/payments.js';
+
+  const PROVIDER_BY_METHOD = { Wave: 'wave', 'Orange Money': 'orange-money' };
 
   function bindRegistration() {
     const root = document.querySelector('[data-registration]');
@@ -133,15 +138,41 @@ const paymentMethods = ['Wave', 'Orange Money', 'WhatsApp'];
       const data = new FormData(form);
       const checkedRadio = form.querySelector('input[name="formation"]:checked');
       const formationTitle = checkedRadio?.dataset.title || data.get('formation') || '';
+      const paymentMethod = data.get('payment');
+
       try {
         await submitForm(form);
       } catch (error) {
         // webhook may not be configured yet — WhatsApp remains the fallback
       }
+
+      const provider = PROVIDER_BY_METHOD[paymentMethod];
+      if (provider) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = lang === 'en' ? 'Redirecting…' : 'Redirection…';
+        try {
+          const { checkoutUrl } = await initiateCheckout(provider, {
+            amount: checkedRadio?.dataset.amount,
+            currency: checkedRadio?.dataset.currency || 'XOF',
+            formation: data.get('formation'),
+            name: data.get('name'),
+            phone: data.get('phone'),
+            email: data.get('email'),
+          });
+          if (checkoutUrl) {
+            window.location.assign(checkoutUrl);
+            return;
+          }
+        } catch (error) {
+          // Wave/Orange Money not configured yet (no API key) — fall back to WhatsApp below
+        }
+        submitBtn.disabled = false;
+      }
+
       const message =
         lang === 'en'
-          ? `Hello PROcréal, I just registered for "${formationTitle}" — ${data.get('name')} (${data.get('phone')}). Payment: ${data.get('payment')}.`
-          : `Bonjour PROcréal, je viens de m'inscrire à "${formationTitle}" — ${data.get('name')} (${data.get('phone')}). Paiement : ${data.get('payment')}.`;
+          ? `Hello PROcréal, I just registered for "${formationTitle}" — ${data.get('name')} (${data.get('phone')}). Payment: ${paymentMethod}.`
+          : `Bonjour PROcréal, je viens de m'inscrire à "${formationTitle}" — ${data.get('name')} (${data.get('phone')}). Paiement : ${paymentMethod}.`;
       const finishLink = root.querySelector('[data-whatsapp-finish]');
       if (finishLink) finishLink.href = whatsappUrl(message);
       form.classList.add('hidden');

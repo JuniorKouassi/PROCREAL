@@ -105,7 +105,12 @@ const socials = [
     </div>
 
     <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
-      <p>&copy; {new Date().getFullYear()} PROcréal. {t('footer.rights')}</p>
+      <p>
+        &copy; {new Date().getFullYear()}{' '}
+        <a href="https://www.webdesignmindset.com/" target="_blank" rel="noopener noreferrer" class="hover:text-white">
+          Web Design Mindset
+        </a>. {t('footer.rights')}
+      </p>
       <div class="flex gap-5">
         <a href={localizePath('/mentions-legales', lang)} class="hover:text-white">{t('footer.legalMentions')}</a>
         <a href={localizePath('/politique-confidentialite', lang)} class="hover:text-white">{t('footer.privacyPolicy')}</a>

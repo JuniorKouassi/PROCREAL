@@ -24,7 +24,7 @@ const palette = [
 
 const images = [
   { category: 'Promotions', caption: '4th cohort — 3D Drafting Designers' },
-  { category: 'Cours', caption: 'AutoCAD workshop, Evening Classes' },
+  { category: 'Cours', caption: 'The PROcréal team, KASSI François Conference Room', src: '/img/team-salle-kassi-francois.jpg' },
   { category: 'Remises de diplômes', caption: 'FDFP certificate ceremony' },
   { category: 'Promotions', caption: '3rd cohort — Architect Assistants' },
   { category: 'Événements', caption: 'ArchiCAD Masterclass, 36th anniversary edition' },
@@ -39,7 +39,7 @@ const images = [
   const [from, to] = palette[index % palette.length];
   return {
     ...image,
-    src: `https://placehold.co/600x${index % 3 === 0 ? 750 : 600}/${from}/${to}?text=${encodeURIComponent(image.category)}`,
+    src: image.src || `https://placehold.co/600x${index % 3 === 0 ? 750 : 600}/${from}/${to}?text=${encodeURIComponent(image.category)}`,
   };
 });
 ---

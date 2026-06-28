@@ -2,10 +2,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import Lenis from 'lenis';
+import { initHeroCanvas } from './heroCanvas.js';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 let lenis = null;
+let stopHeroCanvas = null;
 
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -146,6 +148,10 @@ function initMarquee(reduceMotion) {
 
 export function initSiteAnimations() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+  if (stopHeroCanvas) {
+    stopHeroCanvas();
+    stopHeroCanvas = null;
+  }
 
   const reduceMotion = prefersReducedMotion();
   initLenis(reduceMotion);
@@ -155,6 +161,7 @@ export function initSiteAnimations() {
   initCounters(reduceMotion);
   initCardTilt(reduceMotion);
   initMarquee(reduceMotion);
+  stopHeroCanvas = initHeroCanvas();
 
   ScrollTrigger.refresh();
 }

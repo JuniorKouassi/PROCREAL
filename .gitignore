@@ -18,6 +18,9 @@ pnpm-debug.log*
 .env.production
 .env.local
 
+# design handoff bundles (source material, not site content)
+*.zip
+
 # macOS-specific files
 .DS_Store
 

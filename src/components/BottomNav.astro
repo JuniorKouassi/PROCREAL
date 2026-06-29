@@ -33,8 +33,8 @@ function isActive(href) {
           ]}
         >
           {active && <span class="absolute top-0 h-0.5 w-7 rounded-full bg-yellow"></span>}
-          <NavIcon name={item.icon} class="h-5 w-5" />
-          <span class="leading-none">{item.label}</span>
+          <NavIcon name={item.icon} class="h-5 w-5 shrink-0" />
+          <span class="flex h-[20px] items-center justify-center px-0.5 text-center leading-[10px]">{item.label}</span>
         </a>
       );
     })}

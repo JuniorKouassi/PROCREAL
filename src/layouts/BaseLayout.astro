@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import BottomNav from '../components/BottomNav.astro';
 import { organizationSchema } from '../lib/seo';
 import { getLangFromUrl, switchLocalePath } from '../i18n/utils';
 import '../styles/global.css';
@@ -13,7 +14,7 @@ const {
   image = '/img/og-default.jpg',
   noindex = false,
   jsonLd = [],
-  bodyClass = '',
+  bodyClass = 'pb-16 lg:pb-0',
 } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
@@ -65,6 +66,7 @@ const pageTitle = `${title} — PROcréal`;
     </main>
     <Footer lang={lang} />
     <WhatsAppFloat lang={lang} />
+    <BottomNav lang={lang} />
     <script>
       import '../lib/animations.js';
     </script>

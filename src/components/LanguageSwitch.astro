@@ -1,12 +1,13 @@
 ---
 import { switchLocalePath } from '../i18n/utils';
 
-const { lang, class: className = '' } = Astro.props;
+const { lang, class: className = '', size = 'sm' } = Astro.props;
 const pathname = Astro.url.pathname;
 const frPath = switchLocalePath(pathname, 'fr');
 const enPath = switchLocalePath(pathname, 'en');
+const sizeClass = size === 'xs' ? 'text-xs' : 'text-sm';
 ---
-<div class={`flex items-center gap-1.5 text-sm font-semibold ${className}`}>
+<div class={`flex items-center gap-1.5 ${sizeClass} font-semibold ${className}`}>
   <a
     href={frPath}
     class={`flex items-center gap-1.5 ${lang === 'fr' ? 'opacity-100' : 'opacity-50 hover:opacity-100'}`}

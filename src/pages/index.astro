@@ -62,17 +62,20 @@ const pillars = [
   />
 
   <section class="bg-navy-dark py-10 text-white">
-    <div class="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-5 lg:grid-cols-4 lg:px-8">
+    <div class="mx-auto grid max-w-6xl grid-cols-3 gap-8 px-5 lg:grid-cols-4 lg:px-8">
       <div class="reveal text-center">
         <p class="font-heading text-2xl font-bold lg:text-3xl">{t('common.since')}</p>
         <p class="mt-1 text-sm text-white/60">Centre fondé à Abidjan</p>
       </div>
-      <StatsCounter value={4} label={t('common.promotionsFormed')} />
+      <div class="reveal text-center">
+        <p class="font-heading text-2xl font-bold lg:text-3xl"><span data-counter="4">0</span></p>
+        <p class="mt-1 text-sm text-white/60">{t('common.promotionsFormed')}</p>
+      </div>
       <div class="reveal text-center">
         <p class="font-heading text-2xl font-bold text-yellow lg:text-3xl">FDFP</p>
         <p class="mt-1 text-sm text-white/60">{t('common.approvedFdfp')}</p>
       </div>
-      <div class="reveal text-center">
+      <div class="reveal hidden text-center lg:block">
         <p class="font-heading text-2xl font-bold lg:text-3xl">ArchiCAD / AutoCAD</p>
         <p class="mt-1 text-sm text-white/60">{t('common.certified')}</p>
       </div>

@@ -8,11 +8,10 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const items = [
   { href: '/formations', label: t('nav.formations'), icon: 'cap' },
-  { href: '/cours-du-soir', label: t('nav.coursDuSoir'), icon: 'moon' },
-  { href: '/masterclass', label: t('nav.masterclass'), icon: 'star' },
+  { href: '/cours-du-soir', label: t('nav.coursDuSoir'), icon: 'clock' },
+  { href: '/masterclass', label: t('nav.masterclass'), icon: 'award' },
   { href: '/a-propos', label: t('nav.aPropos'), icon: 'info' },
   { href: '/galerie', label: t('nav.galerie'), icon: 'image' },
-  { href: '/blog', label: t('nav.blog'), icon: 'doc' },
 ];
 
 function isActive(href) {
@@ -22,7 +21,7 @@ function isActive(href) {
 ---
 
 <nav data-bottom-nav class="fixed inset-x-0 bottom-0 z-40 h-16 border-t border-white/10 bg-navy-dark lg:hidden" aria-label="Navigation mobile">
-  <div class="grid h-full grid-cols-6">
+  <div class="grid h-full grid-cols-5">
     {items.map((item) => {
       const active = isActive(item.href);
       return (

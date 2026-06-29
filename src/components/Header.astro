@@ -59,8 +59,11 @@ const whatsappHref = `https://wa.me/2250749817621?text=${encodeURIComponent(t('w
     <div class="relative z-10 flex items-center gap-3 lg:hidden">
       <LanguageSwitch lang={lang} size="xs" class="text-[var(--header-fg)]" />
       <button type="button" data-mobile-menu-toggle class="flex h-10 w-10 items-center justify-center" aria-label="Menu" aria-expanded="false">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="text-[var(--header-fg)]">
+        <svg data-menu-icon-open width="22" height="22" viewBox="0 0 24 24" fill="none" class="text-[var(--header-fg)]">
           <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <svg data-menu-icon-close width="22" height="22" viewBox="0 0 24 24" fill="none" class="hidden text-[var(--header-fg)]">
+          <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
         </svg>
       </button>
     </div>
@@ -74,9 +77,6 @@ const whatsappHref = `https://wa.me/2250749817621?text=${encodeURIComponent(t('w
     ))}
     <a href={localizePath('/inscription', lang)} class="mt-2 rounded-full bg-cyan px-5 py-3 text-center font-semibold text-white">
       {t('cta.register')}
-    </a>
-    <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class="mt-1 rounded-full border border-navy/15 px-5 py-3 text-center font-semibold text-navy">
-      {t('cta.whatsapp')}
     </a>
   </div>
 </header>
@@ -94,6 +94,12 @@ const whatsappHref = `https://wa.me/2250749817621?text=${encodeURIComponent(t('w
   }
   header[data-site-header].menu-open [data-mobile-menu] {
     display: flex;
+  }
+  header[data-site-header].menu-open [data-menu-icon-open] {
+    display: none;
+  }
+  header[data-site-header].menu-open [data-menu-icon-close] {
+    display: block;
   }
 </style>
 

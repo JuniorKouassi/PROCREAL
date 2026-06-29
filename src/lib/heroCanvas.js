@@ -62,6 +62,8 @@ function drawCables(ctx, w, h, cables) {
 export function initHeroCanvas() {
   const canvas = document.querySelector('[data-hero-canvas]');
   if (!canvas) return () => {};
+  // Hidden below md (Tailwind 768px) — the cable lines crowd the photo on small screens.
+  if (!window.matchMedia('(min-width: 768px)').matches) return () => {};
 
   const ctx = canvas.getContext('2d');
   const cables = buildCables();

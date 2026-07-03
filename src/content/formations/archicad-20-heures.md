@@ -40,6 +40,7 @@ faq_en:
     answer: "To guarantee individual support at every workstation throughout the 20 hours."
   - question: "Is this enough to work professionally on ArchiCAD?"
     answer: "It covers the basics; the Evening Classes or the 3D Drafting Designer course go further."
+image: "/img/Archicad avancé.jpg"
 instructor: "KOKO Landry"
 description: "Apprenez. Concevez. Réalisez. Une offre spéciale et intensive pour 20 étudiants seulement."
 description_en: "Learn. Design. Build. A special, intensive offer for 20 students only."

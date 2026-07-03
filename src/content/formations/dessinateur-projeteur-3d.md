@@ -49,6 +49,7 @@ faq_en:
     answer: "Yes, the certificate issued is FDFP-approved (Fonds de Développement de la Formation Professionnelle)."
   - question: "How many cohorts have already graduated?"
     answer: "This session opens the center's 4th cohort of 3D drafting designers."
+image: "/img/3D architecte.jpg"
 instructor: "KOKO Landry"
 featured: true
 description: ""

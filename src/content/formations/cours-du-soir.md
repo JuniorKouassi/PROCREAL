@@ -56,6 +56,7 @@ faq_en:
     answer: "Software is installed on the center's computers; you can also bring your own laptop."
   - question: "Is there a final assessment?"
     answer: "Yes, each module ends with a graded practical project that validates your certificate."
+image: "/img/Autocad.jpg"
 instructor: "KOKO Landry"
 featured: true
 description: "Trois soirs par semaine, passez du dessin manuel à la maîtrise d'AutoCAD et ArchiCAD sans toucher à votre emploi du jour."

@@ -14,7 +14,16 @@ const href = localizePath(`/formations/${formation.id}`, lang);
   data-tilt
   class="reveal group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm shadow-navy/5 ring-1 ring-navy/5 transition-shadow hover:shadow-xl hover:shadow-cyan/10"
 >
-  <div class="relative h-44 shrink-0 bg-gradient-to-br from-navy to-cyan">
+  <div class="relative h-44 shrink-0 overflow-hidden bg-gradient-to-br from-navy to-cyan">
+    {data.image && (
+      <img
+        src={data.image}
+        alt=""
+        aria-hidden="true"
+        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+    )}
+    <div class="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/40 to-navy/20"></div>
     {data.newBadge && (
       <span class="absolute left-4 top-4 rounded-full bg-yellow px-3 py-1 text-xs font-bold text-navy">{t('common.new')}</span>
     )}

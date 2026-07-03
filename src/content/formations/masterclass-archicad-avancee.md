@@ -65,6 +65,7 @@ faq_en:
     answer: "No, it's reserved for PROcréal alumni to keep a consistent skill level in the room."
   - question: "What if I miss one day?"
     answer: "Both days are complementary and very dense, so attendance on both days is required."
+image: "/img/Archicad.jpg"
 instructor: "KOKO Landry"
 featured: true
 newBadge: true

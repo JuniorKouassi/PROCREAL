@@ -1,0 +1,122 @@
+---
+const { lang } = Astro.props;
+
+const message =
+  lang === 'en'
+    ? "Hello PROcréal, I'd like to grab the special offer for the ArchiCAD 20 Hours training (20 students only)."
+    : "Bonjour PROcréal, je souhaite profiter de l'offre spéciale pour la formation ArchiCAD 20 Heures (20 places).";
+
+const whatsappHref = `https://wa.me/2250749817621?text=${encodeURIComponent(message)}`;
+const closeLabel = lang === 'en' ? 'Close' : 'Fermer';
+const altText =
+  lang === 'en'
+    ? 'Special offer for 20 students — ArchiCAD 20 Hours, join us at +225 07 49 81 76 21'
+    : 'Offre spéciale pour 20 étudiants — ArchiCAD 20 Heures, rejoins-nous au +225 07 49 81 76 21';
+---
+
+<div
+  id="promo-popup-overlay"
+  data-promo-overlay
+  data-expiry="2026-07-18T23:59:59Z"
+  class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/78 px-4"
+>
+  <div class="promo-popup-card relative w-full max-w-[380px] sm:max-w-[420px]">
+    <button
+      type="button"
+      data-promo-close
+      aria-label={closeLabel}
+      class="absolute -right-3 -top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-lg leading-none text-white transition-colors hover:bg-black/80"
+    >
+      &times;
+    </button>
+    <a href={whatsappHref} target="_blank" rel="noopener noreferrer" data-promo-link class="block overflow-hidden rounded-2xl shadow-2xl">
+      <img
+        src="/img/flyer-archicad-20h-remise-diplome.jpg"
+        alt={altText}
+        class="block h-auto max-h-[80vh] w-full object-contain"
+        width="1024"
+        height="1536"
+      />
+    </a>
+  </div>
+</div>
+
+<style>
+  @keyframes promoEnter {
+    0% {
+      opacity: 0;
+      transform: scale(0.7) translateY(40px);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.04) translateY(-6px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  @keyframes promoFloat {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+      box-shadow: 0 0 0 rgba(245, 197, 24, 0);
+    }
+    50% {
+      transform: translateY(-8px) rotate(0.4deg);
+      box-shadow: 0 10px 40px rgba(245, 197, 24, 0.35);
+    }
+  }
+  .promo-popup-card {
+    animation: promoEnter 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .promo-popup-card.floating {
+    animation: promoFloat 3.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .promo-popup-card,
+    .promo-popup-card.floating {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  function initPromoPopup() {
+    const overlay = document.querySelector('[data-promo-overlay]');
+    if (!(overlay instanceof HTMLElement)) return;
+
+    const expiry = new Date(overlay.dataset.expiry ?? '');
+    if (Number.isNaN(expiry.getTime()) || new Date() > expiry) return;
+
+    const STORAGE_KEY = 'procreal-promo-20h-seen';
+    if (localStorage.getItem(STORAGE_KEY)) return;
+
+    const card = overlay.querySelector('.promo-popup-card');
+    const closeBtn = overlay.querySelector('[data-promo-close]');
+    const link = overlay.querySelector('[data-promo-link]');
+    let autoCloseTimer;
+
+    function closePopup() {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+      clearTimeout(autoCloseTimer);
+      localStorage.setItem(STORAGE_KEY, '1');
+    }
+
+    closeBtn?.addEventListener('click', closePopup);
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) closePopup();
+    });
+    link?.addEventListener('click', () => localStorage.setItem(STORAGE_KEY, '1'));
+
+    setTimeout(() => {
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+      card?.addEventListener('animationend', () => card.classList.add('floating'), { once: true });
+      autoCloseTimer = setTimeout(closePopup, 6000);
+    }, 1200);
+  }
+
+  document.addEventListener('astro:page-load', initPromoPopup);
+</script>

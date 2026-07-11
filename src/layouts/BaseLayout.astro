@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import BottomNav from '../components/BottomNav.astro';
+import PromoPopup from '../components/PromoPopup.astro';
 import { organizationSchema } from '../lib/seo';
 import { getLangFromUrl, switchLocalePath } from '../i18n/utils';
 import '../styles/global.css';
@@ -67,6 +68,7 @@ const pageTitle = `${title} — PROcréal`;
     <Footer lang={lang} />
     <WhatsAppFloat lang={lang} />
     <BottomNav lang={lang} />
+    <PromoPopup lang={lang} />
     <script>
       import '../lib/animations.js';
     </script>

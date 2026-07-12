@@ -22,6 +22,7 @@ const testimonials = (await getCollection('testimonials'))
 const reelTestimonials = testimonials.map((item) => ({
   quote: item.quote,
   author: item.name,
+  role: item.role,
   image: item.avatar,
   alt: item.name,
 }));

@@ -3,7 +3,7 @@
  * Counter-rotating scroll reel + per-character text rise, ported to
  * vanilla Astro/JS (no React) to match the rest of the site.
  *
- * testimonials: { quote: string, author: string, image?: string, alt?: string }[]
+ * testimonials: { quote: string, author: string, role?: string, image?: string, alt?: string }[]
  */
 const { testimonials = [], charStaggerMs = 6, class: className = '' } = Astro.props;
 
@@ -25,7 +25,7 @@ for (let i = 0; i < 3; i++) middleItems.push({ type: 'cell' });
 const initialMiddleY = centerIdx * STEP;
 const initialSideY = -initialMiddleY;
 
-const first = testimonials[0] ?? { quote: '', author: '' };
+const first = testimonials[0] ?? { quote: '', author: '', role: '' };
 
 function initials(name) {
   return (name || '?').trim().charAt(0).toUpperCase();
@@ -106,12 +106,18 @@ const dataJson = JSON.stringify(testimonials).replace(/</g, '\\u003c');
 
       <div class="relative w-full max-w-[390px] overflow-hidden" aria-live="polite">
         <div aria-hidden="true" data-sizer class="invisible flex min-h-[140px] flex-col gap-[19px]">
-          <p class="m-0 text-lg font-medium leading-[1.3] tracking-[-0.02em] text-navy sm:text-[22px]">{first.quote}</p>
-          <p class="m-0 text-sm font-medium leading-[1.3] text-muted">{first.author}</p>
+          <p class="m-0 text-lg font-medium leading-[1.3] tracking-[-0.02em] text-navy sm:text-[22px]" data-sizer-quote>{first.quote}</p>
+          <div class="flex flex-col gap-0.5">
+            <p class="m-0 text-sm font-semibold leading-[1.3] text-navy" data-sizer-author>{first.author}</p>
+            <p class="m-0 text-xs font-medium leading-[1.3] text-muted" data-sizer-role>{first.role}</p>
+          </div>
         </div>
         <div data-text-stage class="absolute inset-x-0 top-0 flex flex-col gap-[19px] will-change-[transform,opacity]">
           <p class="m-0 text-lg font-medium leading-[1.3] tracking-[-0.02em] text-navy sm:text-[22px]" data-quote></p>
-          <p class="m-0 text-sm font-medium leading-[1.3] text-muted" data-author></p>
+          <div class="flex flex-col gap-0.5">
+            <p class="m-0 text-sm font-semibold leading-[1.3] text-navy" data-author></p>
+            <p class="m-0 text-xs font-medium leading-[1.3] text-muted" data-role></p>
+          </div>
         </div>
       </div>
     </div>
@@ -180,7 +186,9 @@ const dataJson = JSON.stringify(testimonials).replace(/</g, '\\u003c');
     root.dataset.reelBound = '1';
 
     const jsonEl = root.querySelector('script[data-testimonials-json]');
-    const testimonials: { quote: string; author: string }[] = jsonEl ? JSON.parse(jsonEl.textContent || '[]') : [];
+    const testimonials: { quote: string; author: string; role?: string }[] = jsonEl
+      ? JSON.parse(jsonEl.textContent || '[]')
+      : [];
     const count = testimonials.length;
     if (!count) return;
 
@@ -191,11 +199,12 @@ const dataJson = JSON.stringify(testimonials).replace(/</g, '\\u003c');
     const midCol = root.querySelector<HTMLElement>('[data-col="middle"]');
     const rightCol = root.querySelector<HTMLElement>('[data-col="right"]');
     const textStage = root.querySelector<HTMLElement>('[data-text-stage]');
-    const sizer = root.querySelector<HTMLElement>('[data-sizer]');
     const quoteEl = root.querySelector<HTMLElement>('[data-quote]');
     const authorEl = root.querySelector<HTMLElement>('[data-author]');
-    const sizerQuote = sizer?.querySelector('p:first-child');
-    const sizerAuthor = sizer?.querySelector('p:last-child');
+    const roleEl = root.querySelector<HTMLElement>('[data-role]');
+    const sizerQuote = root.querySelector<HTMLElement>('[data-sizer-quote]');
+    const sizerAuthor = root.querySelector<HTMLElement>('[data-sizer-author]');
+    const sizerRole = root.querySelector<HTMLElement>('[data-sizer-role]');
     const prevBtn = root.querySelector<HTMLButtonElement>('[data-prev]');
     const nextBtn = root.querySelector<HTMLButtonElement>('[data-next]');
 
@@ -205,10 +214,14 @@ const dataJson = JSON.stringify(testimonials).replace(/</g, '\\u003c');
 
     function renderText(i: number) {
       const t = testimonials[i];
+      const authorStart = t.quote.length + 6;
+      const roleStart = authorStart + t.author.length + 6;
       if (quoteEl) quoteEl.innerHTML = splitChars(t.quote, 0, staggerMs);
-      if (authorEl) authorEl.innerHTML = splitChars(t.author, t.quote.length + 6, staggerMs);
+      if (authorEl) authorEl.innerHTML = splitChars(t.author, authorStart, staggerMs);
+      if (roleEl) roleEl.innerHTML = t.role ? splitChars(t.role, roleStart, staggerMs) : '';
       if (sizerQuote) sizerQuote.textContent = t.quote;
       if (sizerAuthor) sizerAuthor.textContent = t.author;
+      if (sizerRole) sizerRole.textContent = t.role || '';
     }
 
     function updateColumns() {

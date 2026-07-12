@@ -1,0 +1,148 @@
+---
+/**
+ * Interactive 3D fanned photo stack, ported to vanilla Astro/JS
+ * (no React/Framer Motion) from a reference component. Panels fan
+ * out in perspective; moving the mouse ripples a wave through the
+ * stack and gently re-tilts the whole scene toward the cursor.
+ * With no pointer (touch/mobile), it renders as a static 3D fan.
+ */
+const { images = [], class: className = '' } = Astro.props;
+
+const PANEL_COUNT = 16;
+const Z_SPREAD = 42;
+
+const GRADIENTS = [
+  'linear-gradient(135deg, rgba(10,42,107,0.55) 0%, rgba(61,169,224,0.45) 100%)',
+  'linear-gradient(135deg, rgba(61,169,224,0.5) 0%, rgba(10,42,107,0.5) 100%)',
+  'linear-gradient(135deg, rgba(10,42,107,0.5) 0%, rgba(245,197,24,0.35) 100%)',
+  'linear-gradient(135deg, rgba(245,197,24,0.32) 0%, rgba(61,169,224,0.5) 100%)',
+  'linear-gradient(135deg, rgba(7,28,74,0.6) 0%, rgba(61,169,224,0.4) 100%)',
+  'linear-gradient(135deg, rgba(61,169,224,0.45) 0%, rgba(245,197,24,0.28) 100%)',
+];
+
+const panels = Array.from({ length: PANEL_COUNT }).map((_, index) => {
+  const t = index / (PANEL_COUNT - 1);
+  const baseZ = (index - (PANEL_COUNT - 1)) * Z_SPREAD;
+  const w = 150 + t * 70;
+  const h = 210 + t * 100;
+  const opacity = 0.3 + t * 0.7;
+  const image = images[index % images.length];
+  const gradient = GRADIENTS[index % GRADIENTS.length];
+  const borderAlpha = 0.08 + t * 0.22;
+  return { index, baseZ, w, h, opacity, image, gradient, borderAlpha };
+});
+---
+
+<div
+  data-photo-stack
+  class={`relative mx-auto flex h-[340px] w-full items-center justify-center select-none md:h-[460px] ${className}`}
+  style="perspective: 900px;"
+>
+  <div data-stack-scene class="relative" style="transform-style: preserve-3d; width: 0; height: 0; transform: rotateY(-42deg) rotateX(18deg);">
+    {panels.map((p) => (
+      <div
+        data-panel
+        class="absolute overflow-hidden rounded-xl pointer-events-none"
+        style={`width:${p.w}px;height:${p.h}px;margin-left:${-p.w / 2}px;margin-top:${-p.h / 2}px;opacity:${p.opacity};transform-origin:bottom center;transform:translateZ(${p.baseZ}px) translateY(0px) scaleY(1);`}
+      >
+        <div class="absolute inset-0 bg-cover bg-center" style={`background-image:url(${p.image})`} />
+        <div class="absolute inset-0" style={`background:${p.gradient};mix-blend-mode:multiply;`} />
+        <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.35) 100%);" />
+        <div class="absolute inset-0 rounded-xl" style={`border:1px solid rgba(255,255,255,${p.borderAlpha});box-sizing:border-box;`} />
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  const SIGMA = 2.8;
+  const WAVE_LERP = 0.22;
+  const SCENE_LERP = 0.1;
+
+  function initStack(root: HTMLElement) {
+    if (root.dataset.stackBound === '1') return;
+    root.dataset.stackBound = '1';
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const scene = root.querySelector<HTMLElement>('[data-stack-scene]');
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
+    const count = panels.length;
+    if (!scene || !count) return;
+
+    const zValues = panels.map((p) => {
+      const t = p.style.transform.match(/translateZ\(([-\d.]+)px\)/);
+      return t ? parseFloat(t[1]) : 0;
+    });
+
+    let rotYTarget = -42;
+    let rotXTarget = 18;
+    let rotY = -42;
+    let rotX = 18;
+
+    const waveTarget = new Array(count).fill(0);
+    const wave = new Array(count).fill(0);
+    const scaleTarget = new Array(count).fill(1);
+    const scale = new Array(count).fill(1);
+
+    let raf: number | null = null;
+
+    function render() {
+      rotY += (rotYTarget - rotY) * SCENE_LERP;
+      rotX += (rotXTarget - rotX) * SCENE_LERP;
+      scene!.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+
+      let settled = Math.abs(rotYTarget - rotY) < 0.01 && Math.abs(rotXTarget - rotX) < 0.01;
+
+      for (let i = 0; i < count; i++) {
+        wave[i] += (waveTarget[i] - wave[i]) * WAVE_LERP;
+        scale[i] += (scaleTarget[i] - scale[i]) * WAVE_LERP;
+        if (Math.abs(waveTarget[i] - wave[i]) > 0.01 || Math.abs(scaleTarget[i] - scale[i]) > 0.001) settled = false;
+        panels[i].style.transform = `translateZ(${zValues[i]}px) translateY(${wave[i]}px) scaleY(${scale[i]})`;
+      }
+
+      if (!settled) {
+        raf = requestAnimationFrame(render);
+      } else {
+        raf = null;
+      }
+    }
+
+    function kick() {
+      if (raf === null) raf = requestAnimationFrame(render);
+    }
+
+    root.addEventListener('mousemove', (e: MouseEvent) => {
+      const rect = root.getBoundingClientRect();
+      const cx = (e.clientX - rect.left) / rect.width;
+      const cy = (e.clientY - rect.top) / rect.height;
+
+      rotYTarget = -42 + (cx - 0.5) * 14;
+      rotXTarget = 18 + (cy - 0.5) * -10;
+
+      const cursorPos = cx * (count - 1);
+      for (let i = 0; i < count; i++) {
+        const dist = Math.abs(i - cursorPos);
+        const influence = Math.exp(-(dist * dist) / (2 * SIGMA * SIGMA));
+        waveTarget[i] = -influence * 70;
+        scaleTarget[i] = 0.35 + influence * 0.65;
+      }
+      kick();
+    });
+
+    root.addEventListener('mouseleave', () => {
+      rotYTarget = -42;
+      rotXTarget = 18;
+      waveTarget.fill(0);
+      scaleTarget.fill(1);
+      kick();
+    });
+  }
+
+  function initAllStacks() {
+    document.querySelectorAll<HTMLElement>('[data-photo-stack]').forEach(initStack);
+  }
+
+  document.addEventListener('astro:page-load', initAllStacks);
+</script>

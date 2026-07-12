@@ -1,26 +1,11 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import GalleryGrid from '../components/GalleryGrid.astro';
-import PhotoStack3D from '../components/PhotoStack3D.astro';
+import GalleryFan from '../components/GalleryFan.astro';
 import { useTranslations } from '../i18n/utils';
 
 const lang = 'fr';
 const t = useTranslations(lang);
-
-const stackImages = [
-  '/img/kakemono-promotion.jpg',
-  '/img/team-salle-kassi-francois.jpg',
-  '/img/remise-diplome-2025.jpg',
-  '/img/promo-assistant-architecte-1.jpg',
-  '/img/cours-salle-kassi-francois.jpg',
-  '/img/promo-assistant-architecte-2.jpg',
-  '/img/cours-autocad-presentation.jpg',
-  '/img/remise-diplome-kouadio-2026.jpg',
-  '/img/remise-diplome-savane-kouakou-2026.jpg',
-  '/img/photo-groupe-remise-diplomes-2026-1.jpg',
-  '/img/photo-groupe-remise-diplomes-2026-2.jpg',
-  '/img/flyer-archicad-20h-remise-diplome.jpg',
-];
 
 const categories = ['Toutes', 'Promotions', 'Remises de diplômes', 'Cours', 'Événements'];
 
@@ -55,6 +40,10 @@ const images = [
     src: image.src || `https://placehold.co/600x${index % 3 === 0 ? 750 : 600}/${from}/${to}?text=${encodeURIComponent(image.category)}`,
   };
 });
+
+const fanCards = images
+  .filter((image) => image.src.startsWith('/img/'))
+  .map((image) => ({ imgUrl: image.src, alt: image.caption }));
 ---
 
 <PageLayout
@@ -67,10 +56,10 @@ const images = [
     { name: t('nav.galerie'), url: '/galerie' },
   ]}
 >
-  <section class="hidden overflow-hidden bg-navy-dark py-14 lg:block lg:py-20">
+  <section class="overflow-hidden bg-cream pt-14 lg:pt-20">
     <div class="mx-auto max-w-6xl px-5 lg:px-8">
-      <p class="reveal text-center text-sm font-semibold uppercase tracking-wide text-cyan">Déplace le curseur</p>
-      <PhotoStack3D images={stackImages} class="reveal mt-4" />
+      <p class="reveal text-center text-sm font-semibold uppercase tracking-wide text-cyan">La vie du centre en images</p>
+      <GalleryFan cards={fanCards} class="reveal" />
     </div>
   </section>
 

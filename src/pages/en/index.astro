@@ -4,7 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/Hero.astro';
 import StatsCounter from '../../components/StatsCounter.astro';
 import FormationCard from '../../components/FormationCard.astro';
-import TestimonialSlider from '../../components/TestimonialSlider.astro';
+import ScrollReelTestimonials from '../../components/ScrollReelTestimonials.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import CTASection from '../../components/CTASection.astro';
 import { localizePath, useTranslations } from '../../i18n/utils';
@@ -18,6 +18,13 @@ const featuredFormations = allFormations.filter((f) => f.data.featured).slice(0,
 const testimonials = (await getCollection('testimonials'))
   .filter((entry) => entry.data.featured)
   .map((entry) => ({ ...entry.data, role: entry.data.role_en || entry.data.role, quote: entry.data.quote_en || entry.data.quote }));
+
+const reelTestimonials = testimonials.map((item) => ({
+  quote: item.quote,
+  author: item.name,
+  image: item.avatar,
+  alt: item.name,
+}));
 
 const latestPosts = (await getCollection('blog'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -164,7 +171,7 @@ const pillars = [
         <h2 class="mt-3 font-heading text-3xl font-bold text-navy balance lg:text-4xl">Our alumni speak</h2>
       </div>
       <div class="mt-12">
-        <TestimonialSlider testimonials={testimonials} />
+        <ScrollReelTestimonials testimonials={reelTestimonials} />
       </div>
     </div>
   </section>

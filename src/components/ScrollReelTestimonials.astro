@@ -232,19 +232,11 @@ const dataJson = JSON.stringify(testimonials).replace(/</g, '\\u003c');
       if (rightCol) rightCol.style.transform = `translateY(${sideY}px)`;
     }
 
-    function updateButtons() {
-      if (prevBtn) prevBtn.disabled = index === 0;
-      if (nextBtn) nextBtn.disabled = index === count - 1;
-    }
-
     function paginate(dir: 1 | -1) {
       if (animating) return;
-      const next = index + dir;
-      if (next < 0 || next >= count) return;
       animating = true;
-      index = next;
+      index = ((index + dir) % count + count) % count;
       updateColumns();
-      updateButtons();
       textStage?.classList.add('scroll-reel-exit');
       setTimeout(() => {
         displayIndex = index;
@@ -256,20 +248,56 @@ const dataJson = JSON.stringify(testimonials).replace(/</g, '\\u003c');
       }, SLIDE_MS);
     }
 
-    prevBtn?.addEventListener('click', () => paginate(-1));
-    nextBtn?.addEventListener('click', () => paginate(1));
+    const AUTOPLAY_MS = 5000;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let autoplayTimer: ReturnType<typeof setInterval> | null = null;
+
+    function startAutoplay() {
+      if (reduceMotion || count < 2 || autoplayTimer || document.hidden) return;
+      autoplayTimer = setInterval(() => paginate(1), AUTOPLAY_MS);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    function restartAutoplay() {
+      stopAutoplay();
+      startAutoplay();
+    }
+
+    prevBtn?.addEventListener('click', () => {
+      paginate(-1);
+      restartAutoplay();
+    });
+    nextBtn?.addEventListener('click', () => {
+      paginate(1);
+      restartAutoplay();
+    });
     root.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') {
         e.preventDefault();
         paginate(1);
+        restartAutoplay();
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         paginate(-1);
+        restartAutoplay();
       }
+    });
+    root.addEventListener('mouseenter', stopAutoplay);
+    root.addEventListener('mouseleave', startAutoplay);
+    root.addEventListener('focusin', stopAutoplay);
+    root.addEventListener('focusout', startAutoplay);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopAutoplay();
+      else startAutoplay();
     });
 
     renderText(0);
-    updateButtons();
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -278,6 +306,8 @@ const dataJson = JSON.stringify(testimonials).replace(/</g, '\\u003c');
         });
       });
     });
+
+    startAutoplay();
   }
 
   function initAllReels() {

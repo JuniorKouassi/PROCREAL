@@ -3,21 +3,21 @@ const { lang } = Astro.props;
 
 const message =
   lang === 'en'
-    ? "Hello PROcréal, I'd like to grab the special offer for the ArchiCAD 20 Hours training (20 students only)."
-    : "Bonjour PROcréal, je souhaite profiter de l'offre spéciale pour la formation ArchiCAD 20 Heures (20 places).";
+    ? "Hello PROcréal, I'd like to register for the 2nd wave of the Evening Classes — Drafting Designers (August 11, 2026)."
+    : "Bonjour PROcréal, je souhaite m'inscrire à la 2e vague du Cours du soir — Dessinateurs Projeteurs (11 août 2026).";
 
 const whatsappHref = `https://wa.me/2250749817621?text=${encodeURIComponent(message)}`;
 const closeLabel = lang === 'en' ? 'Close' : 'Fermer';
 const altText =
   lang === 'en'
-    ? 'Special offer for 20 students — ArchiCAD 20 Hours, join us at +225 07 49 81 76 21'
-    : 'Offre spéciale pour 20 étudiants — ArchiCAD 20 Heures, rejoins-nous au +225 07 49 81 76 21';
+    ? '2nd wave — Evening Classes for Drafting Designers, starting August 11, 2026, with trainer Landry KOKO. Join us at +225 07 49 81 76 21'
+    : '2e vague — Cours du soir Dessinateurs Projeteurs, à partir du 11 août 2026, avec le formateur Landry KOKO. Rejoins-nous au +225 07 49 81 76 21';
 ---
 
 <div
   id="promo-popup-overlay"
   data-promo-overlay
-  data-expiry="2026-07-18T23:59:59Z"
+  data-expiry="2026-08-11T23:59:59Z"
   class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/78 px-4"
 >
   <div class="promo-popup-card relative w-full max-w-[380px] sm:max-w-[420px]">
@@ -31,11 +31,11 @@ const altText =
     </button>
     <a href={whatsappHref} target="_blank" rel="noopener noreferrer" data-promo-link class="block overflow-hidden rounded-2xl shadow-2xl">
       <img
-        src="/img/flyer-archicad-20h-remise-diplome.jpg"
+        src="/img/flyer-cours-du-soir-2e-vague.jpg"
         alt={altText}
         class="block h-auto max-h-[80vh] w-full object-contain"
-        width="1024"
-        height="1536"
+        width="1148"
+        height="1476"
       />
     </a>
   </div>
@@ -89,7 +89,7 @@ const altText =
     const expiry = new Date(overlay.dataset.expiry ?? '');
     if (Number.isNaN(expiry.getTime()) || new Date() > expiry) return;
 
-    const STORAGE_KEY = 'procreal-promo-20h-seen';
+    const STORAGE_KEY = 'procreal-promo-cours-du-soir-2vague-seen';
     if (localStorage.getItem(STORAGE_KEY)) return;
 
     const card = overlay.querySelector('.promo-popup-card');

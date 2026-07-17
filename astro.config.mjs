@@ -3,10 +3,13 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://procreal.ci',
   trailingSlash: 'never',
+
   i18n: {
     defaultLocale: 'fr',
     locales: ['fr', 'en'],
@@ -14,13 +17,17 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
+
   integrations: [sitemap({
     i18n: {
       defaultLocale: 'fr',
       locales: { fr: 'fr-CI', en: 'en' },
     },
   })],
+
   vite: {
     plugins: [tailwindcss()],
   },
+
+  adapter: cloudflare(),
 });
